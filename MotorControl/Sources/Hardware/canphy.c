@@ -16,7 +16,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /****************************************外部变量声明*****************************************/
-extern u8  g_canType[CAN_ID_TYPE_NUM];
+extern u32 g_canType[CAN_ID_TYPE_NUM];
 extern u16 g_canPrescaler[CAN_BAUDRATE_NUM];
 extern SystemInterfaceStruct g_systemIntfc;
 
@@ -45,7 +45,7 @@ extern SystemInterfaceStruct g_systemIntfc;
 *********************************************************************************************/
 void CANInit(void)
 {
-    u32 mask;
+    u32 canType = g_canType[g_systemIntfc.canIntfc.idTypeIndex];
     CAN_FilterInitTypeDef CAN_FilterInitStructure;
     NVIC_InitTypeDef      NVIC_InitStructure;
     GPIO_InitTypeDef      GPIO_InitStructure;
@@ -91,31 +91,41 @@ void CANInit(void)
 
     CAN_Init(CAN_SYSTEM_CAN_TYPE, &CAN_InitStructure);
 
-    //配置滤波器
+    //配置滤波器0
     CAN_FilterInitStructure.CAN_FilterNumber = 0;
 
     //为了过滤出一组标识符，应该设置过滤器组工作在屏蔽位模式
     //为了过滤出一个标识符，应该设置过滤器组工作在标识符列表模式
-    CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
+    CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdList;
     CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
     
     //(STID[10:3])(STID[2:0]EXID[17:13])(EXID[12:5])(EXID[4:0]IDE RTR 0)
-    CAN_FilterInitStructure.CAN_FilterIdHigh = ((g_systemIntfc.canIntfc.targetId << 3) >>16) & 0xFFFF;
-    CAN_FilterInitStructure.CAN_FilterIdLow = (u16)(g_systemIntfc.canIntfc.targetId << 3) | g_canType[g_systemIntfc.canIntfc.idTypeIndex];
+    CAN_FilterInitStructure.CAN_FilterIdHigh = (u16)(((g_systemIntfc.canIntfc.targetId << 3) >>16) & 0xFFFF);
+    CAN_FilterInitStructure.CAN_FilterIdLow = (u16)((g_systemIntfc.canIntfc.targetId << 3) | canType);
+    
+    CAN_FilterInitStructure.CAN_FilterMaskIdHigh = (u16)(((g_systemIntfc.canIntfc.groupId << 3) >>16) & 0xFFFF);
+    CAN_FilterInitStructure.CAN_FilterMaskIdLow = (u16)((g_systemIntfc.canIntfc.groupId << 3) | canType);
 
-    mask = g_systemIntfc.canIntfc.targetId ^ 
-           g_systemIntfc.canIntfc.groupId ^ 
-           g_systemIntfc.canIntfc.radioId;
-    mask = ~mask;
-    mask <<= 3;
-    mask |= 0x02;    //只接收数据帧，不接收远程帧 
+    CAN_FilterInitStructure.CAN_FilterFIFOAssignment = CAN_SYSTEM_CAN_FIFO;
+    CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
+    CAN_FilterInit(&CAN_FilterInitStructure);
+
+    //配置滤波器1
+    CAN_FilterInitStructure.CAN_FilterNumber = 1;
+
+    //为了过滤出一组标识符，应该设置过滤器组工作在屏蔽位模式
+    //为了过滤出一个标识符，应该设置过滤器组工作在标识符列表模式
+    CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdList;
+    CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit;
     
     //(STID[10:3])(STID[2:0]EXID[17:13])(EXID[12:5])(EXID[4:0]IDE RTR 0)
-    CAN_FilterInitStructure.CAN_FilterMaskIdHigh = (mask >> 16) & 0xFFFF;
-    CAN_FilterInitStructure.CAN_FilterMaskIdLow = mask & 0xFFFF;
-
+    CAN_FilterInitStructure.CAN_FilterIdHigh = (u16)(((g_systemIntfc.canIntfc.radioId << 3) >>16) & 0xFFFF);
+    CAN_FilterInitStructure.CAN_FilterIdLow = (u16)((g_systemIntfc.canIntfc.radioId << 3) | canType);
     
-    CAN_FilterInitStructure.CAN_FilterFIFOAssignment = CAN_FIFO0;
+    CAN_FilterInitStructure.CAN_FilterMaskIdHigh = (u16)(((g_systemIntfc.canIntfc.radioId << 3) >>16) & 0xFFFF);
+    CAN_FilterInitStructure.CAN_FilterMaskIdLow = (u16)((g_systemIntfc.canIntfc.radioId << 3) | canType);
+
+    CAN_FilterInitStructure.CAN_FilterFIFOAssignment = CAN_SYSTEM_CAN_FIFO;
     CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
     CAN_FilterInit(&CAN_FilterInitStructure);
     

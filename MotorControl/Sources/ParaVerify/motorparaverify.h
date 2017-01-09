@@ -43,8 +43,9 @@ typedef enum
 
 typedef enum
 {
-    ENCODER_INC,   //增量式
-    ENCODER_ABS    //绝对式
+    ENCODER_NONE,    //没有编码器
+    ENCODER_INC,     //增量式
+    ENCODER_ABS      //绝对式
     
 }EncoderTypeEnum;
 
@@ -53,6 +54,7 @@ typedef struct
     EncoderTypeEnum type;
     EncoderChanEnum chanNum;
     u16             lineNum;
+    f32             linePerRadian;    //每弧度上的线数，等于正交后的线数除以2π
       
 }EncoderInfoStruct;
 

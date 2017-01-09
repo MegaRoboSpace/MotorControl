@@ -32,6 +32,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 #define    CAN_SYSTEM_CAN_TYPE     CAN1            //系统使用的CAN类型: CAN1或者CAN2
 #define    CAN_SYSTEM_ID_TYPE      CAN_ID_EXT      //系统使用的ID类型:  CAN_ID_STD或者CAN_ID_EXT
+#define    CAN_SYSTEM_CAN_FIFO     CAN_FIFO0
 
 
 

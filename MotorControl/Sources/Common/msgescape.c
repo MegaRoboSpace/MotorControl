@@ -31,7 +31,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 /******************************************函数实现*******************************************/
 /*********************************************************************************************
-函 数 名: EscapeMsgAndXor;
+函 数 名: EscapeMsg;
 实现功能: 无; 
 输入参数: 无;
 输出参数: 无;
@@ -47,13 +47,13 @@ void EscapeMsg(u8 *pDestBuffer, u8 *pSrcBuffer, u8 *pLength)
     {
         receiveByte = pSrcBuffer[i];
 
-        if (receiveByte == 0xFE) //如果遇到0xFE
+        if (receiveByte == FE_BEFORE_ESCAPE) //如果遇到0xFE
         {
             pDestBuffer[j++] = FEFD_AFTER_ESCAPE_H;
             pDestBuffer[j++] = FE_AFTER_ESCAPE_L;
 
         }
-        else if (receiveByte == 0xFD) //如果遇到0xFD
+        else if (receiveByte == FD_BEFORE_ESCAPE) //如果遇到0xFD
         {
             pDestBuffer[j++] = FEFD_AFTER_ESCAPE_H;
             pDestBuffer[j++] = FD_AFTER_ESCAPE_L;
@@ -79,25 +79,21 @@ bool DeescapeMsgAndXorCheck(u8 *pSrcBuffer, u8 *plength)
 {
     u8 i, j;
     u8 xorLen = *plength;
-    u8 receiveByte, fcs = 0;
+    u8 receiveByte, fcs = FE_BEFORE_ESCAPE;
 
     for (i = 0, j = 0; i < xorLen; i++)    //j是新消息长度缓冲变量
     {
         receiveByte = pSrcBuffer[i];
-
-        fcs ^= receiveByte;    //发送端计算异或校验值是在转义之后
 
         if (receiveByte == FEFD_AFTER_ESCAPE_H)
         {
             i++;
             if (pSrcBuffer[i] == FE_AFTER_ESCAPE_L)
             {
-                fcs ^= FE_AFTER_ESCAPE_L;
                 receiveByte = FE_BEFORE_ESCAPE;
             }
             else if (pSrcBuffer[i] == FD_AFTER_ESCAPE_L)
             {
-                fcs ^= FD_AFTER_ESCAPE_L;
                 receiveByte = FD_BEFORE_ESCAPE;
             }
             else
@@ -106,7 +102,7 @@ bool DeescapeMsgAndXorCheck(u8 *pSrcBuffer, u8 *plength)
             }
         }
 
-        //fcs ^= receiveByte;
+        fcs ^= receiveByte;
         pSrcBuffer[j++] = receiveByte;    //将转义之后的值赋回原消息
     }
 

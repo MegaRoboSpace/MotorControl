@@ -39,7 +39,7 @@ u16 g_uartStopBit[UART_STOP_BIT_NUM] = {USART_StopBits_1, USART_StopBits_0_5,
 u16 g_uartParity[UART_PARITY_NUM]    = {USART_Parity_No, USART_Parity_Even, USART_Parity_Odd};
 
 
-u8  g_canType[CAN_ID_TYPE_NUM] = {CAN_ID_STD, CAN_ID_EXT};
+u32 g_canType[CAN_ID_TYPE_NUM] = {CAN_ID_STD, CAN_ID_EXT};
 
 //按顺序依次对应的波特率是1000、500、250、125、100、50、20、10kBps
 u16 g_canPrescaler[CAN_BAUDRATE_NUM] = {6, 12, 24, 48, 60, 120, 300, 600};    

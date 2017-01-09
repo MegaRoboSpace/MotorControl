@@ -728,7 +728,7 @@ void OutOfStepOutNumQuery(u8 cmdDataLen, u8 *pCmdData)
     u8 *pData;
 
     
-    cmdMainType = CMD_MOTION;
+    cmdMainType = CMD_OUTOFSTEP;
     cmdSubType = OOSCMD_OUTNUMQ;
     dataLen = sizeof(g_motionInfo.outOfStepInfo.outOfSteps);
     pData = (u8 *)&g_motionInfo.outOfStepInfo.outOfSteps;
@@ -773,7 +773,7 @@ void OutOfStepResponseQuery(u8 cmdDataLen, u8 *pCmdData)
     u8 *pData;
 
     
-    cmdMainType = CMD_MOTION;
+    cmdMainType = CMD_OUTOFSTEP;
     cmdSubType = OOSCMD_RESPONSEQ;
     dataLen = sizeof(g_motionInfo.outOfStepInfo.response);
     pData = (u8 *)&g_motionInfo.outOfStepInfo.response;

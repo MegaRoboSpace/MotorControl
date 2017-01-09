@@ -18,6 +18,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 #include "stm32f10x.h"
 #include "datatype.h"
 #include "debug.h"
+#include "msgescape.h"
 
 
 
@@ -44,7 +45,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 #define    USART1_RX_DMA_CH        DMA1_Channel5
 #define    USART1_DR_BASE          (uint32_t)0x40013804
 #define    USART1_BUFF_SIZE        1600
-#define    USART1_START_OF_FRAME   0xFE
+#define    USART1_START_OF_FRAME   FE_BEFORE_ESCAPE
 #define    USART1_FRAME_LEN_MAX    0xFC    //FE和FD会进行转义，为了避免长度被转义所以最大为FC
 
 

@@ -22,6 +22,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 #include "protocolstack.h"
 #include "systemparaverify.h"
 #include "intfcparaverify.h"
+#include "motorparaverify.h"
 
 
 
@@ -30,6 +31,7 @@ extern SystemInfoStruct g_systemInfo;
 extern PvtInfoStruct    g_pvtInfo;
 extern SoftTimerStr     g_pvtCalcEndTimer;
 extern SoftTimerStr     g_debugTimer;
+extern MotorInfoStruct  g_motorInfo;
 extern SystemInterfaceStruct g_systemIntfc;
 
 
@@ -108,7 +110,11 @@ void main(void)
     g_systemIntfc.canIntfc.radioId  = 0x00010000;
 
     g_pvtInfo.fpgaPwmClock = 10000000;    //10MHz
-    g_pvtInfo.radianToStep = 81487.33;
+    g_pvtInfo.targetStep = 1;
+    g_pvtInfo.targetLine = 1;
+
+    g_motorInfo.encoderInfo.linePerRadian = 4000 * RECIP_OF_DBL_RADIAN;
+    g_motorInfo.totalSteps = 512000;
 #endif
 
     //初始化硬件资源

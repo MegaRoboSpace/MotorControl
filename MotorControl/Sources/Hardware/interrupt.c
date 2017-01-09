@@ -435,7 +435,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
     static CanPhyFrameStr *pCanPhyFrame = NULL;
     
 
-    CAN_Receive(CAN_SYSTEM_CAN_TYPE, CAN_FIFO0, &RxMessage); //接收FIFO0中的数据
+    CAN_Receive(CAN_SYSTEM_CAN_TYPE, CAN_SYSTEM_CAN_FIFO, &RxMessage); //接收FIFO0中的数据
 
     //数据帧才处理
     if (CAN_RTR_DATA == RxMessage.RTR)

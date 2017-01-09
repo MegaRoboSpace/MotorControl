@@ -16,7 +16,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司；
 
 /*******************************************宏定义********************************************/ 
 #define   DEBUG_MODE           1
-#define   JTAG_MODE            0
+#define   JTAG_MODE            1
 #define   UART1_REMAP          1
 
 

@@ -75,11 +75,17 @@ typedef struct
     u16            warnPoint;      //FIFO模式下剩余未输出PVT点数下限，少于此值后将向上位机发送警告
 
     u32             fpgaPwmClock;   //FPGA PWM的时钟
+    f32             startPosition;  //PVT表的初始位置
     u32             targetStep;     //当前要求取的步数，每个PVT List初始都是1
     f32             lastStepSpeed;  //上一步的速度，实际存储的是时间
     f32             lastStepTime;   //上一步相对于0时刻的时间(PVT List第一个点的时间永远是0时刻)
+    
+    u32             targetLine;     //当前要求取的线数，每个PVT List初始都是1
+    f32             lastLineSpeed;  //上一线的速度，实际存储的是时间
+    f32             lastLineTime;   //上一线相对于0时刻的时间(PVT List第一个点的时间永远是0时刻)
+    f32             remainLine;     //不是整数线时，尾部的线数
+    
     f32             errorTime;      //误差时间，归一化之后的时间值
-    f32             radianToStep;   //将弧度转换成步数的系数
     DirectionStruct lastStepDir;    //上一步的方向
       
 }PvtInfoStruct;

@@ -49,8 +49,11 @@ extern StreamBufferStr g_CmdParseBuffer;
 void UartFrameSend(u8 dataLen, u8 *pDataBuffer)
 {
     UartPhyFrameStr *pUartPhyFrame = NULL;
+    UartPhyFrameStr uartPhyFrame;
     u8 *pPhyFrame;
-    u8 xorValue = 0;
+    u8 *pTempFrame;
+    u8 xorValue = USART1_START_OF_FRAME;
+    u8 headLen = sizeof(UartPhyFrameStr) - 1;
     u8 i;
 
 
@@ -61,17 +64,30 @@ void UartFrameSend(u8 dataLen, u8 *pDataBuffer)
         pUartPhyFrame = (UartPhyFrameStr *)pPhyFrame;
 
         pPhyFrame[0] = USART1_START_OF_FRAME;
+        
+        uartPhyFrame.frameLen = dataLen + sizeof(UartPhyFrameStr);
+        uartPhyFrame.xorValue = 0;
+        pTempFrame = &uartPhyFrame.frameLen;
 
-        EscapeMsg(pPhyFrame + sizeof(UartPhyFrameStr), pDataBuffer, &dataLen);
-        pPhyFrame[1] = dataLen + sizeof(UartPhyFrameStr);
-        pPhyFrame[2] = 0;
-
-        //计算校验值
-        for (i = 0;i < pUartPhyFrame->frameLen;i++)
+        //计算帧头校验值，不包括SOF
+        for (i = 0;i < headLen;i++)
         {
-            xorValue ^= *pPhyFrame++;
+            xorValue ^= pTempFrame[i];
         }
-        pUartPhyFrame->xorValue = xorValue;
+
+        //计算数据校验值
+        for (i = 0;i < dataLen;i++)
+        {
+            xorValue ^= pDataBuffer[i];
+        }
+        uartPhyFrame.xorValue = xorValue;
+
+        //转义帧头
+        EscapeMsg(pPhyFrame + 1, pTempFrame, &headLen);    //加一是跳过SOF
+
+        //转义数据
+        EscapeMsg(pPhyFrame + 1 + headLen, pDataBuffer, &dataLen);    //加一是跳过SOF
+        pUartPhyFrame->frameLen = headLen + 1 + dataLen;    //加一是算上SOF
         
         Enqueue(&g_uartTxBuffer, pUartPhyFrame->frameLen);
     }
