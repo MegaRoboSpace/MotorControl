@@ -17,8 +17,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
+#include "errorcode.h"
 #include "debug.h"
-#include "cmdparse.h"
 
 
 
@@ -27,41 +28,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef enum
-{
-    UARTCMD_BAUD = 0,
-    UARTCMD_BAUDQ,
-    UARTCMD_WORDLEN,
-    UARTCMD_WORDLENQ,
-    UARTCMD_FLOWCTL,
-    UARTCMD_FLOWCTLQ,
-    UARTCMD_PARITY,
-    UARTCMD_PARITYQ,
-    UARTCMD_STOPBIT,
-    UARTCMD_STOPBITQ,
-    UARTCMD_RESERVE
-    
-}UartCmdSubTypeEnum;
-
-typedef enum
-{
-    CANCMD_TYPE = 0,
-    CANCMD_TYPEQ,
-    CANCMD_SENDID,
-    CANCMD_SENDIDQ,
-    CANCMD_BAUD,
-    CANCMD_BAUDQ,
-    CANCMD_GROUP,
-    CANCMD_GROUPQ,
-    CANCMD_TARGETID,
-    CANCMD_TARGETIDQ,
-    CANCMD_GROUPID,
-    CANCMD_GROUPIDQ,
-    CANCMD_RADIOID,
-    CANCMD_RADIOIDQ,
-    CANCMD_RESERVE
-    
-}CanCmdSubTypeEnum;
 
 
 

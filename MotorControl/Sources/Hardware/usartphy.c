@@ -11,17 +11,12 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 *********************************************************************************************/
 #include <string.h>
 #include "usartphy.h"
-#include "intfcparaverify.h"
+#include "softtimer.h"
 
 
 
 /****************************************外部变量声明*****************************************/
-extern u32 g_uartBaudrate[UART_BAUDRATE_NUM];
-extern u16 g_uartWordLen[UART_WORD_LEN_NUM];
-extern u16 g_uartFlowCtl[UART_FLOW_CTL_NUM];
-extern u16 g_uartStopBit[UART_STOP_BIT_NUM];
-extern u16 g_uartParity[UART_PARITY_NUM];
-extern SystemInterfaceStruct g_systemIntfc;
+extern SystemIntfcStruct g_systemIntfc;
 
 
 
@@ -34,10 +29,40 @@ extern SystemInterfaceStruct g_systemIntfc;
 
 
 /******************************************局部变量*******************************************/
+SoftTimerStr g_uartDmaRecTimer;
+
+u32 g_uartBaudrate[UART_BAUDRATE_NUM] = { 4800,  7200,   9600,  14400, 19200, 
+                                         38400, 57600, 115200, 128000, 4500000};
+u16 g_uartWordLen[UART_WORD_LEN_NUM] = {USART_WordLength_8b, USART_WordLength_9b};
+u16 g_uartFlowCtl[UART_FLOW_CTL_NUM] = {USART_HardwareFlowControl_None, USART_HardwareFlowControl_RTS,
+                                        USART_HardwareFlowControl_CTS, USART_HardwareFlowControl_RTS_CTS};
+u16 g_uartStopBit[UART_STOP_BIT_NUM] = {USART_StopBits_1, USART_StopBits_0_5, 
+                                        USART_StopBits_2, USART_StopBits_1_5};
+u16 g_uartParity[UART_PARITY_NUM]    = {USART_Parity_No, USART_Parity_Even, USART_Parity_Odd};
 
 
 
 /******************************************函数实现*******************************************/
+/*********************************************************************************************
+函 数 名: UartDmaRecTimerCB;
+实现功能: 无; 
+输入参数: 无;
+输出参数: 无;
+返 回 值: 无;
+说    明: 无;
+*********************************************************************************************/
+void UartDmaRecTimerCB(void)
+{
+    //清中断标识，开Usart接收中断
+    USART_ClearFlag(USART1, USART_FLAG_RXNE);
+    USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+
+    //关DMA，超时定时器
+    DMA_Cmd(USART1_RX_DMA_CH, DISABLE);
+    StimerDelete(&g_uartDmaRecTimer);
+}
+
+
 /*********************************************************************************************
 函 数 名: USARTInit;
 实现功能: 无; 
@@ -118,7 +143,7 @@ void USARTInit(void)
     
 
     //配置USART1，波特率115200，数据位8bit，停止位1，校验位None，硬件流控制None，收发全使能
-    USART_InitStructure.USART_BaudRate = g_uartBaudrate[g_systemIntfc.uartIntfc.baudIndex];
+    USART_InitStructure.USART_BaudRate = g_uartBaudrate[g_systemIntfc.uartIntfc.baud];
     USART_InitStructure.USART_WordLength = g_uartWordLen[g_systemIntfc.uartIntfc.wordLen];
     USART_InitStructure.USART_StopBits = g_uartStopBit[g_systemIntfc.uartIntfc.stopBit];
     USART_InitStructure.USART_Parity = g_uartParity[g_systemIntfc.uartIntfc.parity];
@@ -159,18 +184,21 @@ void USARTInit(void)
 
     //使能USART1
     USART_Cmd(USART1, ENABLE);
+
+    //串口DMA接收定时器，超时时间50ms
+    StimerInit(&g_uartDmaRecTimer, 50, UartDmaRecTimerCB);       
 }
 
 
 /*********************************************************************************************
-函 数 名: USARTRecive;
+函 数 名: USART1Recive;
 实现功能: 无; 
 输入参数: 无;
 输出参数: 无;
 返 回 值: 无;
 说    明: 无;
 *********************************************************************************************/
-void USARTRecive(void)
+void USART1Recive(void)
 {
     u16 index = 0;
     
@@ -185,14 +213,14 @@ void USARTRecive(void)
 
 
 /*********************************************************************************************
-函 数 名: USARTSend;
+函 数 名: USART1Send;
 实现功能: 无; 
 输入参数: 无;
 输出参数: 无;
 返 回 值: 无;
 说    明: 无;
 *********************************************************************************************/
-void USARTSend(u8 *pData, u8 dataLen)
+void USART1Send(u8 *pData, u8 dataLen)
 {
 #if 0    //DMA模式，开始之前需要判断上次的发送是否已经结束，不然新的传输会破坏上次传输
     
@@ -212,33 +240,6 @@ void USARTSend(u8 *pData, u8 dataLen)
         }
     }
 #endif
-}
-
-
-/*********************************************************************************************
-函 数 名: UsartBuffDataProcess;
-实现功能: 无; 
-输入参数: 无;
-输出参数: 无;
-返 回 值: 无;
-说    明: 无;
-*********************************************************************************************/
-void UsartBuffDataProcess(void)
-{
-    //u16 index;
-
-    
-    /*if (txRealLen > 0)
-    {
-        for (index = 0;index < txRealLen;index++)
-        {
-            USART_SendData(USART1, usart1TxBuffer[index]);
-            txRealLen--;
-            while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET)
-            {
-            }
-        }
-    }*/
 }
 
 

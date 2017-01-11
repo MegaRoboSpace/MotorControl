@@ -17,8 +17,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
+#include "errorcode.h"
 #include "debug.h"
-#include "paraverify.h"
 
 
 
@@ -27,44 +28,10 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef enum
-{
-    DTYPE_RISE = 0,
-    DTYPE_FALL,
-    DTYPE_HIGH,
-    DTYPE_LOW
-    
-}TriggerTypeEnum;
-
-typedef struct
-{
-    bool             bEnable;
-    u8               threshold;
-    ResponseTypeEnum response;
-    
-}OtpInfoStruct;
-
-typedef struct
-{
-    bool             bEnable;
-    TriggerTypeEnum  triggerType;
-    ResponseTypeEnum response;
-    
-}DsensorInfoStruct;
-
-typedef struct
-{
-    bool             bEnable;
-    f32              threshold;
-    ResponseTypeEnum response;
-    
-}AsensorInfoStruct;
 
 
 
 /*******************************************宏定义********************************************/ 
-#define    DIGIT_SENSOR_NUM     10
-#define    ANALOG_SENSOR_NUM    10
 
 
 

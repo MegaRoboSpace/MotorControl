@@ -17,6 +17,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
 #include "debug.h"
 
 
@@ -26,18 +27,12 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef struct
-{    
-    u32          canID;         //CANID
-    u8           frameLen;      //消息长度，包含CANID和自身
-    u8           payload[0];    //消息数据
-    
-}CanPhyFrameStr;
 
 
 
 /*******************************************宏定义********************************************/ 
 #define    GET_CAN_PHY_FRMAE_DATA_SIZE    frameLen - sizeof(CanPhyFrameStr)
+#define    CAN_FRAME_BYTES_MAX            8       //CAN一帧发送的字节数，最大为8字节
 
 
 
@@ -46,6 +41,7 @@ typedef struct
 
 
 /******************************************函数声明*******************************************/
+void CanStreamBufferInit(void);
 void CanFrameSend(u8 dataLen, u8 *pDataBuffer);
 void CanFrameProcess(void);
 

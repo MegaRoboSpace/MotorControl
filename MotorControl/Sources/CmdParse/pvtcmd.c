@@ -13,7 +13,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 #include "pvtcmd.h"
 #include "pvtparaverify.h"
 #include "softtimer.h"
-#include "protocolstack.h"
+#include "cmdparse.h"
 
 
 
@@ -32,6 +32,8 @@ extern PvtInfoStruct g_pvtInfo;
 
 
 /******************************************局部变量*******************************************/
+SoftTimerStr g_pvtCalcEndTimer;
+
 SubCmdProFunc pPvtCmdFunc[PVTCMD_RESERVE];
 SubCmdProFunc pTrapzCmdFunc[PVTCMD_RESERVE];
 
@@ -585,6 +587,29 @@ void PvtCalcEnd(u8 cmdDataLen, u8 *pCmdData)
 
 
 /*********************************************************************************************
+函 数 名: PvtCalcEndTimerCB;
+实现功能: 无; 
+输入参数: 无;
+输出参数: 无;
+返 回 值: 无;
+说    明: 无;
+*********************************************************************************************/
+void PvtCalcEndTimerCB(void)
+{
+    CmdTypeEnum cmdMainType;
+    PvtCmdSubTypeEnum cmdSubType;
+
+    
+    cmdMainType = CMD_PVT;
+    cmdSubType = PVTCMD_CALCEND;
+    CmdFrameSend(cmdMainType, cmdSubType, 0, NULL);
+
+    //继续开启定时器，收到回复的时候关闭
+    StimerAdd(&g_pvtCalcEndTimer);
+}
+
+
+/*********************************************************************************************
 函 数 名: PvtCmdInit;
 实现功能: 无; 
 输入参数: 无;
@@ -594,6 +619,8 @@ void PvtCalcEnd(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void PvtCmdInit(void)
 {
+    memset(pPvtCmdFunc, 0, sizeof(pPvtCmdFunc));
+
     pPvtCmdFunc[PVTCMD_MODE]         = PvtModeSet;
     pPvtCmdFunc[PVTCMD_MODEQ]        = PvtModeQuery;
     pPvtCmdFunc[PVTCMD_POINT]        = PvtPointSet;
@@ -616,6 +643,8 @@ void PvtCmdInit(void)
     pPvtCmdFunc[PVTCMD_CLEAR]        = PvtClear;
     pPvtCmdFunc[PVTCMD_WARN]         = PvtWarn;
     pPvtCmdFunc[PVTCMD_CALCEND]      = PvtCalcEnd;
+    
+    StimerInit(&g_pvtCalcEndTimer, 1000, PvtCalcEndTimerCB);    //PVT计算结束后向上位机上报的定时器，超时时间1s
 }
 
             
@@ -720,6 +749,8 @@ void TrapzTimeSet(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void TrapzCmdInit(void)
 {
+    memset(pPvtCmdFunc, 0, sizeof(pPvtCmdFunc));
+
     pPvtCmdFunc[TRAPZCMD_POINT]  = TrapzPointSet;
     pPvtCmdFunc[TRAPZCMD_POINTQ] = TrapzPointQuery;
     pPvtCmdFunc[TRAPZCMD_POSN]   = TrapzPositionSet;

@@ -9,16 +9,17 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 完成日期:  2016.12.15;
 历史版本:  无;
 *********************************************************************************************/
+#include <string.h>
 #include "interfacecmd.h"
 #include "intfcparaverify.h"
 #include "usartphy.h"
 #include "canphy.h"
-#include "protocolstack.h"
+#include "cmdparse.h"
 
 
 
 /****************************************外部变量声明*****************************************/
-extern SystemInterfaceStruct g_systemIntfc;
+extern SystemIntfcStruct g_systemIntfc;
 
 
 
@@ -47,13 +48,13 @@ SubCmdProFunc pCanIntfcCmdFunc[CANCMD_RESERVE];
 *********************************************************************************************/
 void UartBaudSet(u8 cmdDataLen, u8 *pCmdData)
 {
-    u8 baudIndex;
+    UartBaudEnum baud;
 
     
     //进行参数验证
-    if (PARA_VERIFY_NO_ERROR == UartBaudVerify(cmdDataLen, pCmdData, (void *)&baudIndex))
+    if (PARA_VERIFY_NO_ERROR == UartBaudVerify(cmdDataLen, pCmdData, (void *)&baud))
     {
-        g_systemIntfc.uartIntfc.baudIndex = baudIndex;
+        g_systemIntfc.uartIntfc.baud = baud;
     }
 }
 
@@ -76,8 +77,8 @@ void UartBaudQuery(u8 cmdDataLen, u8 *pCmdData)
     
     cmdMainType = CMD_UART;
     cmdSubType = UARTCMD_BAUDQ;
-    dataLen = sizeof(g_systemIntfc.uartIntfc.baudIndex);
-    pData = &g_systemIntfc.uartIntfc.baudIndex;
+    dataLen = sizeof(g_systemIntfc.uartIntfc.baud);
+    pData = (u8 *)&g_systemIntfc.uartIntfc.baud;
     CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
 }
 
@@ -302,6 +303,8 @@ void UartApplyPara(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void UartIntfcCmdInit(void)
 {
+    memset(pUartIntfcCmdFunc, 0, sizeof(pUartIntfcCmdFunc));
+
     pUartIntfcCmdFunc[UARTCMD_BAUD]      = UartBaudSet;
     pUartIntfcCmdFunc[UARTCMD_BAUDQ]     = UartBaudQuery;
     pUartIntfcCmdFunc[UARTCMD_WORDLEN]   = UartWordLenSet;
@@ -346,13 +349,13 @@ void UartIntfcCmdProc(CmdParseFrameStr *pCmdStackFrame)
 *********************************************************************************************/
 void CanTypeSet(u8 cmdDataLen, u8 *pCmdData)
 {
-    u8 idIndex;
+    CanTypeEnum idType;
 
     
     //进行参数验证
-    if (PARA_VERIFY_NO_ERROR == CanTypeVerify(cmdDataLen, pCmdData, (void *)&idIndex))
+    if (PARA_VERIFY_NO_ERROR == CanTypeVerify(cmdDataLen, pCmdData, (void *)&idType))
     {
-        g_systemIntfc.canIntfc.idTypeIndex = idIndex;
+        g_systemIntfc.canIntfc.idType = idType;
     }
 }
 
@@ -375,8 +378,8 @@ void CanTypeQuery(u8 cmdDataLen, u8 *pCmdData)
     
     cmdMainType = CMD_CAN;
     cmdSubType = CANCMD_TYPEQ;
-    dataLen = sizeof(g_systemIntfc.canIntfc.idTypeIndex);
-    pData = &g_systemIntfc.canIntfc.idTypeIndex;
+    dataLen = sizeof(g_systemIntfc.canIntfc.idType);
+    pData = (u8 *)&g_systemIntfc.canIntfc.idType;
     CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
 }
 
@@ -436,13 +439,13 @@ void CanSendIdQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void CanBaudSet(u8 cmdDataLen, u8 *pCmdData)
 {
-    u8 baudIndex;
+    CanBaudEnum baud;
 
     
     //进行参数验证
-    if (PARA_VERIFY_NO_ERROR == CanBaudVerify(cmdDataLen, pCmdData, (void *)&baudIndex))
+    if (PARA_VERIFY_NO_ERROR == CanBaudVerify(cmdDataLen, pCmdData, (void *)&baud))
     {
-        g_systemIntfc.canIntfc.baudIndex = baudIndex;
+        g_systemIntfc.canIntfc.baud = baud;
     }
 }
 
@@ -465,8 +468,8 @@ void CanBaudQuery(u8 cmdDataLen, u8 *pCmdData)
     
     cmdMainType = CMD_CAN;
     cmdSubType = CANCMD_BAUDQ;
-    dataLen = sizeof(g_systemIntfc.canIntfc.baudIndex);
-    pData = &g_systemIntfc.canIntfc.baudIndex;
+    dataLen = sizeof(g_systemIntfc.canIntfc.baud);
+    pData = (u8 *)&g_systemIntfc.canIntfc.baud;
     CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
 }
 
@@ -675,6 +678,8 @@ void CanApplyPara(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void CanIntfcCmdInit(void)
 {
+    memset(pCanIntfcCmdFunc, 0, sizeof(pCanIntfcCmdFunc));
+
     pCanIntfcCmdFunc[CANCMD_TYPE]      = CanTypeSet;
     pCanIntfcCmdFunc[CANCMD_TYPEQ]     = CanTypeQuery;
     pCanIntfcCmdFunc[CANCMD_SENDID]    = CanSendIdSet;

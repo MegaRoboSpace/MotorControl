@@ -17,22 +17,20 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 #include "usartmac.h"
 #include "cmdparse.h"
 #include "softtimer.h"
+#include "paraverify.h"
 #include "pvtalgorithm.h"
-#include "pvtparaverify.h"
-#include "protocolstack.h"
-#include "systemparaverify.h"
-#include "intfcparaverify.h"
-#include "motorparaverify.h"
+#include "pvtcmd.h"
 
 
 
 /****************************************外部变量声明*****************************************/
-extern SystemInfoStruct g_systemInfo;
-extern PvtInfoStruct    g_pvtInfo;
-extern SoftTimerStr     g_pvtCalcEndTimer;
-extern SoftTimerStr     g_debugTimer;
-extern MotorInfoStruct  g_motorInfo;
-extern SystemInterfaceStruct g_systemIntfc;
+extern SystemInfoStruct  g_systemInfo;
+extern PvtInfoStruct     g_pvtInfo;
+extern SoftTimerStr      g_debugTimer;
+extern MotorInfoStruct   g_motorInfo;
+extern SystemIntfcStruct g_systemIntfc;
+extern SoftTimerStr      g_uartDmaRecTimer;
+extern SoftTimerStr      g_pvtCalcEndTimer;
 
 
 
@@ -68,7 +66,7 @@ void WorkModeProcess(void)
         //需要通知控制器PVT计算结束
         if (g_pvtInfo.bCalcEnd)
         {
-            PvtCalcEndTimerOutCB();    //先调用回调函数发送一次计算结束，同时开启定时器等待下次发送
+            PvtCalcEndTimerCB();    //先调用回调函数发送一次计算结束，同时开启定时器等待下次发送
         }
     }
     else
@@ -86,7 +84,7 @@ void WorkModeProcess(void)
 返 回 值: 无;
 说    明: 无;
 *********************************************************************************************/
-void main(void)
+int main(void)
 {
     SystemInit();
     RCC_GetClocksFreq(&RCC_ClockFreq);
@@ -100,15 +98,6 @@ void main(void)
     //读取EEprom中保持的参数
 
 #if DEBUG_MODE
-    //配置通信接口为Uart
-    g_systemIntfc.linkType = LINK_UART;
-    g_systemIntfc.uartIntfc.baudIndex = UART_BAUDRATE_115200;
-    g_systemIntfc.canIntfc.idTypeIndex = CAN_ID_TYPE_EXT;
-    g_systemIntfc.canIntfc.sendId   = 0x01000000;
-    g_systemIntfc.canIntfc.targetId = 0x00000001;
-    g_systemIntfc.canIntfc.groupId  = 0x00000100;
-    g_systemIntfc.canIntfc.radioId  = 0x00010000;
-
     g_pvtInfo.fpgaPwmClock = 10000000;    //10MHz
     g_pvtInfo.targetStep = 1;
     g_pvtInfo.targetLine = 1;
@@ -129,11 +118,9 @@ void main(void)
     IWDGInit();
 #endif
 
-    //初始化软件定时器
-    StimerAllInit();
-
     //初始化协议栈
-    ProtocolStackInit();
+    UartStreamBufferInit();
+    CanStreamBufferInit();
 
     //初始化命令解析模块
     CmdParseInit();
@@ -159,7 +146,7 @@ void main(void)
         CanFrameProcess();
         
         //处理Usart数据
-        UsartFrameProcess();
+        UartFrameProcess();
 
         //处理命令集
         CmdParseFrameProcess();
@@ -167,12 +154,15 @@ void main(void)
         //处理工作(根据工作模式进行处理)
         WorkModeProcess();
         
-        //处理所有的软件定时器
-        StimerAllCheck();
+        //处理所有的软件定时器 
+        StimerExamine(&g_uartDmaRecTimer);
+        StimerExamine(&g_pvtCalcEndTimer);
         
         //喂狗
         IWDGFeed();
     }
+
+    return 0;
 }
 
 

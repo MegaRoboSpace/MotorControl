@@ -9,8 +9,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 完成日期:  2016.12.15;
 历史版本:  无;
 *********************************************************************************************/
+#include <string.h>
 #include "updatecmd.h"
-#include "protocolstack.h"
+#include "cmdparse.h"
 
 
 
@@ -89,6 +90,34 @@ void UpdateData(u8 cmdDataLen, u8 *pCmdData)
 
 
 /*********************************************************************************************
+函 数 名: UpdateJump;
+实现功能: 无; 
+输入参数: 无;
+输出参数: 无;
+返 回 值: 无;
+说    明: 无;
+*********************************************************************************************/
+void UpdateJump(u8 cmdDataLen, u8 *pCmdData)
+{    
+
+}
+
+
+/*********************************************************************************************
+函 数 名: UpdateAppAddrSet;
+实现功能: 无; 
+输入参数: 无;
+输出参数: 无;
+返 回 值: 无;
+说    明: 无;
+*********************************************************************************************/
+void UpdateAppAddrSet(u8 cmdDataLen, u8 *pCmdData)
+{    
+
+}
+
+
+/*********************************************************************************************
 函 数 名: UpdateEnd;
 实现功能: 无; 
 输入参数: 无;
@@ -97,6 +126,20 @@ void UpdateData(u8 cmdDataLen, u8 *pCmdData)
 说    明: 无;
 *********************************************************************************************/
 void UpdateEnd(u8 cmdDataLen, u8 *pCmdData)
+{    
+
+}
+
+
+/*********************************************************************************************
+函 数 名: UpdateFpgaAddrSet;
+实现功能: 无; 
+输入参数: 无;
+输出参数: 无;
+返 回 值: 无;
+说    明: 无;
+*********************************************************************************************/
+void UpdateFpgaAddrSet(u8 cmdDataLen, u8 *pCmdData)
 {    
 
 }
@@ -112,11 +155,15 @@ void UpdateEnd(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void UpdateCmdInit(void)
 {
-    pUpdateCmdFunc[UPDATECMD_START] = UpdateStart;
-    pUpdateCmdFunc[UPDATECMD_READY] = UpdateReady;
-    pUpdateCmdFunc[UPDATECMD_TYPE]  = UpdateType;
-    pUpdateCmdFunc[UPDATECMD_DATA]  = UpdateData;
-    pUpdateCmdFunc[UPDATECMD_END]   = UpdateEnd;
+    memset(pUpdateCmdFunc, 0, sizeof(pUpdateCmdFunc));
+
+    pUpdateCmdFunc[UPDATECMD_START]       = UpdateStart;
+    pUpdateCmdFunc[UPDATECMD_READY]       = UpdateReady;
+    pUpdateCmdFunc[UPDATECMD_DATA]        = UpdateData;
+    pUpdateCmdFunc[UPDATECMD_END]         = UpdateEnd;
+    pUpdateCmdFunc[UPDATECMD_JUMP]        = UpdateJump;
+    pUpdateCmdFunc[UPDATECMD_APPADDR]     = UpdateAppAddrSet;
+    pUpdateCmdFunc[UPDATECMD_FPGAADDR]    = UpdateFpgaAddrSet;
 }
 
             

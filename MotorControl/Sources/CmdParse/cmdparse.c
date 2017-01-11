@@ -12,6 +12,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 #include <stdlib.h>
 #include <string.h>
 #include "cmdparse.h"
+#include "canmac.h"
+#include "usartmac.h"
+#include "streambuffer.h"
 #include "systemcmd.h"
 #include "interfacecmd.h"
 #include "pvtcmd.h"
@@ -21,14 +24,14 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 #include "debugcmd.h"
 #include "motorcmd.h"
 #include "sensorcmd.h"
-#include "paraverify.h"
-#include "intfcparaverify.h"
-#include "protocolstack.h"
 
 
 
 /****************************************外部变量声明*****************************************/
-extern SystemInterfaceStruct g_systemIntfc;
+extern StreamBufferStr   g_canRxBuffer;
+extern StreamBufferStr   g_uartRxBuffer;
+extern SystemIntfcStruct g_systemIntfc;
+extern SystemInfoStruct  g_systemInfo;
 
 
 
@@ -41,6 +44,11 @@ extern SystemInterfaceStruct g_systemIntfc;
 
 
 /******************************************局部变量*******************************************/
+StreamBufferStr g_CmdParseBuffer;    //命令解析缓冲区
+u8  CmdParseBuffer[480];
+
+CmdParseFunc  pCmdParseFunc[CMD_RESERVE];      //CAN应用层回调函数数组
+SubCmdProFunc pLinkCmdFunc[LINKCMD_RESERVE];
 
 
 
@@ -61,32 +69,113 @@ void CmdFrameSend(CmdTypeEnum cmdMainType, u8 cmdSubType, u8 dataLen, u8 *pData)
     switch (g_systemIntfc.linkType)
     {
         case LINK_CAN:
-            pSendBuffer = (u8 *)malloc(sendLen);
-            if (pSendBuffer != NULL)
+            if (sendLen <= UART_FRAME_BYTES_BFESCAPE_MAX)
             {
-                pSendBuffer[0] = cmdMainType;
-                pSendBuffer[1] = cmdSubType;
-                memcpy(pSendBuffer + 2, pData, dataLen);
-                CanFrameSend(sendLen, pSendBuffer);
+                pSendBuffer = (u8 *)malloc(sendLen);
+                if (pSendBuffer != NULL)
+                {
+                    pSendBuffer[0] = cmdMainType;
+                    pSendBuffer[1] = cmdSubType;
+                    memcpy(pSendBuffer + 2, pData, dataLen);
+                    CanFrameSend(sendLen, pSendBuffer);
+                }
+                free(pSendBuffer);
             }
-            free(pSendBuffer);
           break;
           
         case LINK_UART:
-            pSendBuffer = (u8 *)malloc(sendLen);
-            if (pSendBuffer != NULL)
+            if (sendLen <= CAN_FRAME_BYTES_MAX)
             {
-                pSendBuffer[0] = cmdMainType;
-                pSendBuffer[1] = cmdSubType;
-                memcpy(pSendBuffer + 2, pData, dataLen);
-                UartFrameSend(sendLen, pSendBuffer);
+                pSendBuffer = (u8 *)malloc(sendLen);
+                if (pSendBuffer != NULL)
+                {
+                    pSendBuffer[0] = cmdMainType;
+                    pSendBuffer[1] = cmdSubType;
+                    memcpy(pSendBuffer + 2, pData, dataLen);
+                    UartFrameSend(sendLen, pSendBuffer);
+                }
+                free(pSendBuffer);
             }
-            free(pSendBuffer);
           break;
 
         default:
           break;
     }
+}
+
+
+/*********************************************************************************************
+函 数 名: LinkIntfcSet;
+实现功能: 无; 
+输入参数: 无;
+输出参数: 无;
+返 回 值: 无;
+说    明: 无;
+*********************************************************************************************/
+void LinkIntfcSet(u8 cmdDataLen, u8 *pCmdData)
+{
+    u8 subType;
+    
+
+    if (sizeof(LinkTypeEnum) == cmdDataLen)    //长度先要正确
+    {
+        subType = *pCmdData;    
+        switch (subType)
+        {
+            case 0:
+                g_systemIntfc.linkType = LINK_CAN;
+              break;
+              
+            case 1: 
+                g_systemIntfc.linkType = LINK_UART;
+              break;
+
+            default:
+                g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = PARA_VERIFY_ERROR_TYPE;
+              break;
+        }
+    }
+}
+
+
+/*********************************************************************************************
+函 数 名: LinkIntfcQuery;
+实现功能: 无; 
+输入参数: 无;
+输出参数: 无;
+返 回 值: 无;
+说    明: 无;
+*********************************************************************************************/
+void LinkIntfcQuery(u8 cmdDataLen, u8 *pCmdData)
+{
+    CmdTypeEnum cmdMainType;
+    LinkCmdSubTypeEnum cmdSubType;
+    u8 dataLen;
+    u8 *pData;
+
+    
+    cmdMainType = CMD_LINK;
+    cmdSubType = LINKCMD_INTFCQ;
+    dataLen = sizeof(g_systemIntfc.linkType);
+    pData = (u8 *)&g_systemIntfc.linkType;
+    CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
+}
+
+
+/*********************************************************************************************
+函 数 名: LinkCmdInit;
+实现功能: 无; 
+输入参数: 无;
+输出参数: 无;
+返 回 值: 无;
+说    明: 无;
+*********************************************************************************************/
+void LinkCmdInit(void)
+{
+    memset(pLinkCmdFunc, 0, sizeof(pLinkCmdFunc));
+
+    pLinkCmdFunc[LINKCMD_INTFC]  = LinkIntfcSet;
+    pLinkCmdFunc[LINKCMD_INTFCQ] = LinkIntfcQuery;
 }
 
 
@@ -99,22 +188,14 @@ void CmdFrameSend(CmdTypeEnum cmdMainType, u8 cmdSubType, u8 dataLen, u8 *pData)
 说    明: 无;
 *********************************************************************************************/
 void LinkCmdProc(CmdParseFrameStr *pCmdStackFrame)
-{
-    u8 subType = pCmdStackFrame->subType;
+{    
+    u8 dataLen = pCmdStackFrame->dataLen;
+    u8 *pData = pCmdStackFrame->payload;
+
     
-
-    switch (subType)
-    {
-        case LINKCMD_CAN:
-            g_systemIntfc.linkType = LINK_CAN;
-          break;
-          
-        case LINKCMD_UART: 
-            g_systemIntfc.linkType = LINK_UART;
-          break;
-
-        default:
-          break;
+    if ((pCmdStackFrame->subType < LINKCMD_RESERVE) && (pLinkCmdFunc[pCmdStackFrame->subType] != NULL))
+    {    
+        pLinkCmdFunc[pCmdStackFrame->subType](dataLen, pData);
     }
 }
 
@@ -130,24 +211,26 @@ void LinkCmdProc(CmdParseFrameStr *pCmdStackFrame)
 void CmdParseInit()
 {
     //注册命令解析模块回调函数
-    CmdParseFrameRegister(CMD_LINK,       LinkCmdProc);
-    CmdParseFrameRegister(CMD_SYSTME,     SystemCmdProc);
-    CmdParseFrameRegister(CMD_UART,       UartIntfcCmdProc);
-    CmdParseFrameRegister(CMD_CAN,        CanIntfcCmdProc);
-    CmdParseFrameRegister(CMD_MOTOR,      MotorCmdProc);
-    CmdParseFrameRegister(CMD_ENCODER,    EncoderCmdProc);
-    CmdParseFrameRegister(CMD_PVT,        PvtCmdProc);
-    CmdParseFrameRegister(CMD_TRAPZCURVE, TrapzCmdProc);
-    CmdParseFrameRegister(CMD_MOTION,     MotionCmdProc);
-    CmdParseFrameRegister(CMD_OUTOFSTEP,  OutOfStepCmdProc);
-    CmdParseFrameRegister(CMD_OTP,        OtpCmdProc);
-    CmdParseFrameRegister(CMD_DSENSOR,    DsensorCmdProc);
-    CmdParseFrameRegister(CMD_ASENSOR,    AsensorCmdProc);
-    CmdParseFrameRegister(CMD_CALIBRATE,  CalibrateCmdProc);
-    CmdParseFrameRegister(CMD_UPDATE,     UpdateCmdProc);
-    CmdParseFrameRegister(CMD_DEBUG,      DebugCmdProc);
+    memset(pCmdParseFunc, 0, sizeof(pCmdParseFunc));
+    pCmdParseFunc[CMD_LINK]       = LinkCmdProc;
+    pCmdParseFunc[CMD_SYSTME]     = SystemCmdProc;
+    pCmdParseFunc[CMD_UART]       = UartIntfcCmdProc;
+    pCmdParseFunc[CMD_CAN]        = CanIntfcCmdProc;
+    pCmdParseFunc[CMD_MOTOR]      = MotorCmdProc;
+    pCmdParseFunc[CMD_ENCODER]    = EncoderCmdProc;
+    pCmdParseFunc[CMD_PVT]        = PvtCmdProc;
+    pCmdParseFunc[CMD_TRAPZCURVE] = TrapzCmdProc;
+    pCmdParseFunc[CMD_MOTION]     = MotionCmdProc;
+    pCmdParseFunc[CMD_OUTOFSTEP]  = OutOfStepCmdProc;
+    pCmdParseFunc[CMD_OTP]        = OtpCmdProc;
+    pCmdParseFunc[CMD_DSENSOR]    = DsensorCmdProc;
+    pCmdParseFunc[CMD_ASENSOR]    = AsensorCmdProc;
+    pCmdParseFunc[CMD_CALIBRATE]  = CalibrateCmdProc;
+    pCmdParseFunc[CMD_UPDATE]     = UpdateCmdProc;
+    pCmdParseFunc[CMD_DEBUG]      = DebugCmdProc;
 
     //注册各个子命令模块的回调函数
+    LinkCmdInit();
     SystemCmdInit();
     UartIntfcCmdInit();
     CanIntfcCmdInit();
@@ -163,6 +246,37 @@ void CmdParseInit()
     CalibrateCmdInit();
     UpdateCmdInit();
     DebugCmdInit();
+
+    //初始化命令解析Buffer
+    StreamBufferInit(&g_CmdParseBuffer, CmdParseBuffer, sizeof(CmdParseBuffer));  
+}
+
+
+/*********************************************************************************************
+函 数 名: CmdParseFrameProcess;
+实现功能: 无; 
+输入参数: 无;
+输出参数: 无;
+返 回 值: 无;
+说    明: 无;
+*********************************************************************************************/
+void CmdParseFrameProcess(void)
+{
+    CmdParseFrameStr *pCmdParseFrame = NULL;
+
+
+    if (((!g_canRxBuffer.bNotEmpty) && (!g_uartRxBuffer.bNotEmpty) && g_CmdParseBuffer.bNotEmpty) || 
+        g_CmdParseBuffer.bAlmostFull)
+    {
+        pCmdParseFrame = (CmdParseFrameStr *)GetHead(&g_CmdParseBuffer);
+        
+        if ((pCmdParseFrame->mainType < CMD_RESERVE) && (pCmdParseFunc[pCmdParseFrame->mainType] != NULL))
+        {    
+            pCmdParseFunc[pCmdParseFrame->mainType](pCmdParseFrame);
+        }
+        
+        Dequeue(&g_CmdParseBuffer, pCmdParseFrame->GET_CMD_PARSE_FRMAE_TOTAL_SIZE);
+    }
 }
 
 

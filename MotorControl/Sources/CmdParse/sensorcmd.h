@@ -17,8 +17,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
+#include "errorcode.h"
 #include "debug.h"
-#include "cmdparse.h"
 
 
 
@@ -27,41 +28,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef enum
-{
-    OTPCMD_STATE = 0,
-    OTPCMD_STATEQ,
-    OTPCMD_THRESHOLD,
-    OTPCMD_THRESHOLDQ,
-    OTPCMD_RESPONSE,
-    OTPCMD_RESPONSEQ,
-    OTPCMD_RESERVE
-    
-}OtpCmdSubTypeEnum;
-
-typedef enum
-{
-    DSENSORCMD_STATE = 0,
-    DSENSORCMD_STATEQ,
-    DSENSORCMD_TYPE,
-    DSENSORCMD_TYPEQ,
-    DSENSORCMD_RESPONSE,
-    DSENSORCMD_RESPONSEQ,
-    DSENSORCMD_RESERVE
-    
-}DsensorCmdSubTypeEnum;
-
-typedef enum
-{
-    ASENSORCMD_STATE = 0,
-    ASENSORCMD_STATEQ,
-    ASENSORCMD_THRESHOLD,
-    ASENSORCMD_THRESHOLDQ,
-    ASENSORCMD_RESPONSE,
-    ASENSORCMD_RESPONSEQ,
-    ASENSORCMD_RESERVE
-    
-}AsensorCmdSubTypeEnum;
 
 
 

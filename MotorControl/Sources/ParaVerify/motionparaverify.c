@@ -14,7 +14,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /****************************************外部变量声明*****************************************/
-extern ParaLimitStruct g_paraLimit;
+extern ParaLimitStruct  g_paraLimit;
+extern MotionInfoStruct g_motionInfo;
+extern SystemInfoStruct g_systemInfo;
 
 
 
@@ -27,7 +29,6 @@ extern ParaLimitStruct g_paraLimit;
 
 
 /******************************************局部变量*******************************************/
-MotionInfoStruct g_motionInfo;
 
 
 
@@ -69,6 +70,8 @@ u8 MotionEmrgVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -112,6 +115,8 @@ u8 MotionMaxSpeedVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -149,6 +154,8 @@ u8 MotionMinSpeedVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -192,6 +199,8 @@ u8 MotionMaxPosnVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -233,6 +242,8 @@ u8 MotionMinPosnVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -276,6 +287,8 @@ u8 MotionMaxTorqueVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -318,6 +331,8 @@ u8 MotionMinTorqueVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -358,6 +373,8 @@ u8 MotionReportVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -416,6 +433,8 @@ u8 MotionReportperiodVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -457,6 +476,8 @@ u8 OutOfStepOutNumVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -510,6 +531,8 @@ u8 OutOfStepResponseVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }

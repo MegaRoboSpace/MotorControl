@@ -13,8 +13,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 #include <string.h>
 #include <math.h>
 #include "pvtalgorithm.h"
-#include "pvtparaverify.h"
-#include "motorparaverify.h"
 
 
 
@@ -29,28 +27,20 @@ extern MotorInfoStruct g_motorInfo;
 #define    SQUARE(num)               (num * num)
 #define    CUBE(num)                 (num * num * num)
 #define    TARGET_REAL_OFFSET        0.01           //计算PVT每步速度是，实际步数和目标步数之间最大误差
-#define    RECIP_OF_DBL_RADIAN       0.1591549f    //π取值3.1415926
 
 
 
 /*************************************局部常量和类型定义**************************************/
-typedef struct
-{
-    f32             setpIndex;     //步数编号
-    DirectionStruct direction;
-    
-}SetpInfoStr;
 
 
 
 /******************************************局部变量*******************************************/
-SetpInfoStr setpInfo;
-
 #if DEBUG_MODE
 u32  totalOutput = 0;
 bool bCalibrate = false;
 f32  outputSpeed[12000] = {0};
 u32  indexOffset = 2;
+u64  calcTime = 0;
 #endif
 
 
@@ -63,7 +53,7 @@ u32  indexOffset = 2;
 输出参数：  无；   
 函数返回值：无；  
 *********************************************************************************************/
-void PvtPointCalc(f32 startPosn, f32 startSpeed, f32 endPosn, f32 endSpeed, f32 startTime,
+inline void PvtPointCalc(f32 startPosn, f32 startSpeed, f32 endPosn, f32 endSpeed, f32 startTime,
                   f32 endTime, f32 radianToStep, DirectionStruct direction)
 {
     u32 realOutput;
@@ -256,6 +246,8 @@ void PvtResultCalc(WorkModeEnum workMode)
         {
             indexOffset = g_pvtInfo.targetStep + 1;
         }
+
+        calcTime = g_systemMilliSecTick;
 #endif         
         
         //一次就计算一段，然后出去处理下别的任务
@@ -284,11 +276,11 @@ void PvtResultCalc(WorkModeEnum workMode)
         poseOffset = endPosn - startPosn;
         if (poseOffset < 0)
         {
-            direction = REVERSE;
+            direction = DIR_REVERSE;
         }
         else
         {
-            direction = FORWARD;
+            direction = DIR_FORWARD;
         }
         
         if (direction != g_pvtInfo.lastStepDir)    //反向运动
@@ -383,7 +375,7 @@ void PvtResultCalc(WorkModeEnum workMode)
                                  curTime + startTime, radianToStep, direction);
                     lineStartPosn  = curPost;
                     lineStartSpeed = lineEndSpeed;
-                    lineStartTime = curTime;
+                    lineStartTime = curTime + startTime;
                 }
                 g_pvtInfo.lastLineTime = curTime + startTime;
                 
@@ -439,27 +431,16 @@ void PvtResultCalc(WorkModeEnum workMode)
             g_pvtInfo.lastStepSpeed = 0;
             g_pvtInfo.lastStepTime  = 0;
             g_pvtInfo.errorTime     = 0;
-            g_pvtInfo.lastStepDir   = FORWARD;
+            g_pvtInfo.lastStepDir   = DIR_FORWARD;
         }
 
 #if DEBUG_MODE
+        calcTime = g_systemMilliSecTick - calcTime;
+        
         //计算结束 FOR DEBUG
         GPIOB->BRR = GPIO_Pin_5;
 #endif
     }
-}
-
-
-/*********************************************************************************************
-函数名：    PvtDebugMode；
-实现功能：  计算某个时刻的电机需要到达的速度；
-输入参数：  无；
-输出参数：  无；   
-函数返回值：无；  
-*********************************************************************************************/
-void PvtDebugMode(void)
-{
-    
 }
 
 

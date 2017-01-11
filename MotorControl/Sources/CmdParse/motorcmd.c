@@ -9,9 +9,10 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 完成日期:  2016.12.15;
 历史版本:  无;
 *********************************************************************************************/
+#include <string.h>
 #include "motorcmd.h"
 #include "motorparaverify.h"
-#include "protocolstack.h"
+#include "cmdparse.h"
 
 
 
@@ -45,7 +46,7 @@ SubCmdProFunc pEncoderCmdFunc[ENCODERCMD_RESERVE];
 *********************************************************************************************/
 void MotorMicroStepsSet(u8 cmdDataLen, u8 *pCmdData)
 {
-    u8 microStepsIndex;
+    u16 microStepsIndex;
 
     
     //进行参数验证
@@ -276,6 +277,8 @@ void MotorTypeQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void MotorCmdInit(void)
 {
+    memset(pMotroCmdFunc, 0, sizeof(pMotroCmdFunc));
+
     pMotroCmdFunc[MOTORCMD_MICROSTEPS]  = MotorMicroStepsSet;
     pMotroCmdFunc[MOTORCMD_MICROSTEPSQ] = MotorMicroStepsQuery;
     pMotroCmdFunc[MOTORCMD_GEARRATIO]   = MotorGearRatioSet;
@@ -455,6 +458,8 @@ void EncoderTypeQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void EncoderCmdInit(void)
 {
+    memset(pEncoderCmdFunc, 0, sizeof(pEncoderCmdFunc));
+
     pEncoderCmdFunc[ENCODERCMD_LINENUM]  = EncoderLineNumSet;
     pEncoderCmdFunc[ENCODERCMD_LINENUMQ] = EncoderLineNumQuery;
     pEncoderCmdFunc[ENCODERCMD_CHANNUM]  = EncoderChanNumSet;

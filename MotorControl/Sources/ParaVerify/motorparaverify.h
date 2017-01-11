@@ -17,8 +17,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
+#include "errorcode.h"
 #include "debug.h"
-#include "paraverify.h"
 
 
 
@@ -27,48 +28,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef enum
-{
-    MOTOR_42,
-    MOTOR_57
-    
-}MotorTypeEnum;
-
-typedef enum
-{
-    ECCHAN_1,   //单通道
-    ECCHAN_3    //三通道
-    
-}EncoderChanEnum;
-
-typedef enum
-{
-    ENCODER_NONE,    //没有编码器
-    ENCODER_INC,     //增量式
-    ENCODER_ABS      //绝对式
-    
-}EncoderTypeEnum;
-
-typedef struct
-{
-    EncoderTypeEnum type;
-    EncoderChanEnum chanNum;
-    u16             lineNum;
-    f32             linePerRadian;    //每弧度上的线数，等于正交后的线数除以2π
-      
-}EncoderInfoStruct;
-
-typedef struct
-{
-    u8                   gearRatio;
-    MotorTypeEnum        motorType;
-    u8                   stepsIndex;
-    u8                   microStepsIndex;
-    u32                  peakSpeed;
-    u32                  totalSteps;    //等于microSteps * steps
-    EncoderInfoStruct    encoderInfo;
-      
-}MotorInfoStruct;
 
 
 

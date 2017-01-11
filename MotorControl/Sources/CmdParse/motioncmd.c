@@ -9,9 +9,10 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 完成日期:  2016.12.15;
 历史版本:  无;
 *********************************************************************************************/
+#include <string.h>
 #include "motioncmd.h"
 #include "motionparaverify.h"
-#include "protocolstack.h"
+#include "cmdparse.h"
 
 
 
@@ -640,6 +641,8 @@ void MotionTempQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void MotionCmdInit(void)
 {
+    memset(pMotionCmdFunc, 0, sizeof(pMotionCmdFunc));
+
     pMotionCmdFunc[MOTIONCMD_RUN]        = MotionRun;
     pMotionCmdFunc[MOTIONCMD_STOP]       = MotionStop;
     pMotionCmdFunc[MOTIONCMD_EMRG]       = MotionEmergencySet;
@@ -791,6 +794,8 @@ void OutOfStepResponseQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void OutOfStepCmdInit(void)
 {
+    memset(pOutOfStepCmdFunc, 0, sizeof(pOutOfStepCmdFunc));
+
     pOutOfStepCmdFunc[OOSCMD_OUTNUM]    = OutOfStepOutNumSet;
     pOutOfStepCmdFunc[OOSCMD_OUTNUMQ]   = OutOfStepOutNumQuery;
     pOutOfStepCmdFunc[OOSCMD_RESPONSE]  = OutOfStepResponseSet;

@@ -14,7 +14,8 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /****************************************外部变量声明*****************************************/
-extern ParaLimitStruct g_paraLimit;
+extern ParaLimitStruct  g_paraLimit;
+extern SystemInfoStruct g_systemInfo;
 
 
 
@@ -27,11 +28,6 @@ extern ParaLimitStruct g_paraLimit;
 
 
 /******************************************局部变量*******************************************/
-PvtInfoStruct g_pvtInfo = {false, false, 0, PVT_SINGEL,
-                           {{0, 0, 0},
-                            {0.1274050015509044, 0.4042337149649688, 0.536361535},
-                            {0.2548100031018088, 0.6547734148730262, 0.759514305}},
-                           0, 2};
 
 
 
@@ -81,6 +77,8 @@ u8 PvtModeVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -122,6 +120,8 @@ u8 PvtPositionVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -166,6 +166,8 @@ u8 PvtSpeedVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -208,6 +210,8 @@ u8 PvtTimeVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -252,6 +256,8 @@ u8 PvtStartPointVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -293,6 +299,8 @@ u8 PvtEndPointVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -336,6 +344,8 @@ u8 PvtNcyclesVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -378,6 +388,8 @@ u8 PvtWarnPointVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -419,6 +431,8 @@ u8 TrapzPositionVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -463,6 +477,8 @@ u8 TrapzSpeedVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -504,6 +520,8 @@ u8 TrapzTimeVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }

@@ -9,8 +9,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 完成日期:  2016.12.15;
 历史版本:  无;
 *********************************************************************************************/
+#include <string.h>
 #include "debugcmd.h"
-#include "protocolstack.h"
+#include "cmdparse.h"
 
 
 
@@ -56,6 +57,8 @@ void DebugSet(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void DebugCmdInit(void)
 {
+    memset(pDebugCmdFunc, 0, sizeof(pDebugCmdFunc));
+
     pDebugCmdFunc[DEBUGCMD_SET] = DebugSet;
 }
 

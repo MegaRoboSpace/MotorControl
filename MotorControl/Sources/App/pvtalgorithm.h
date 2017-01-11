@@ -16,10 +16,10 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
-#include "debug.h"
 #include "datatype.h"
-#include "stm32f10x_tim.h"
-#include "systemparaverify.h"
+#include "comStruct.h"
+#include "errorcode.h"
+#include "debug.h"
 
 
 
@@ -27,8 +27,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 
-/*******************************************宏定义********************************************/  
-#define    RECIP_OF_DBL_RADIAN       0.1591549f    //π取值3.1415926
+/*******************************************宏定义********************************************/
 
 
 
@@ -42,7 +41,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 /******************************************函数声明*******************************************/
 void PvtResultCalc(WorkModeEnum workMode);
-void PvtDebugMode(void);
 
 
 

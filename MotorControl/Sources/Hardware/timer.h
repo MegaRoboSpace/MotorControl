@@ -16,8 +16,8 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
-#include "stm32f10x_tim.h"
 #include "datatype.h"
+#include "comStruct.h"
 #include "debug.h"
 
 

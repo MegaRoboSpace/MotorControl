@@ -17,6 +17,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
 #include "debug.h"
 
 
@@ -93,20 +94,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef struct 
-{
-    bool bNotEmpty    :1;      //指示是否为空
-    bool bRewind      :1;      //指示是否回绕
-    bool bAlmostFull  :1;      //指示是否快满了
-    u8   u8Reverse    :5;      //保留
-    u16  bufferSize;
-    u16  headOffset;
-    u16  tailOffset;
-    u16  dataTailOffset;       //有效数据的尾部
-    u16  reserveMemorySize;    
-    u8   *pBuffer;
-    
-}StreamBufferStr;
+
 
 
 /******************************************变量声明*******************************************/

@@ -10,13 +10,12 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 历史版本:  无;
 *********************************************************************************************/
 #include "sensorparaverify.h"
-#include "sensorcmd.h"
-#include "cmdparse.h"
 
 
 
 /****************************************外部变量声明*****************************************/
-extern ParaLimitStruct g_paraLimit;
+extern ParaLimitStruct  g_paraLimit;
+extern SystemInfoStruct g_systemInfo;
 
 
 
@@ -29,9 +28,6 @@ extern ParaLimitStruct g_paraLimit;
 
 
 /******************************************局部变量*******************************************/
-OtpInfoStruct     g_otpInfo;
-DsensorInfoStruct g_dsensorInfo[DIGIT_SENSOR_NUM];
-AsensorInfoStruct g_asensorInfo[ANALOG_SENSOR_NUM];
 
 
 
@@ -72,6 +68,8 @@ u8 OtpStateVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -114,6 +112,8 @@ u8 OtpThresholdVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -168,6 +168,8 @@ u8 OtpResponseVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -219,6 +221,8 @@ u8 DsensorStateVerify(u8 dataLen, u8 *pData, void *pParaValue, u8 *pIndex)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -278,6 +282,8 @@ u8 DsensorTypeVerify(u8 dataLen, u8 *pData, void *pParaValue, u8 *pIndex)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -342,6 +348,8 @@ u8 DsensorResponseVerify(u8 dataLen, u8 *pData, void *pParaValue, u8 *pIndex)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -392,6 +400,8 @@ u8 AsensorStateVerify(u8 dataLen, u8 *pData, void *pParaValue, u8 *pIndex)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -444,6 +454,8 @@ u8 AsensorThresholdVerify(u8 dataLen, u8 *pData, void *pParaValue, u8 *pIndex)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -507,6 +519,8 @@ u8 AsensorResponseVerify(u8 dataLen, u8 *pData, void *pParaValue, u8 *pIndex)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }

@@ -17,8 +17,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
+#include "errorcode.h"
 #include "debug.h"
-#include "cmdparse.h"
 
 
 
@@ -27,49 +28,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef enum
-{
-    MOTIONCMD_RUN = 0,
-    MOTIONCMD_STOP,
-    MOTIONCMD_EMRG,
-    MOTIONCMD_EMRGQ,
-    MOTIONCMD_MAXSPEED,
-    MOTIONCMD_MAXSPEEDQ,
-    MOTIONCMD_MINSPEED,
-    MOTIONCMD_MINSPEEDQ,
-    MOTIONCMD_MAXPOSN,
-    MOTIONCMD_MAXPOSNQ,
-    MOTIONCMD_MINPOSN,
-    MOTIONCMD_MINPOSNQ,
-    MOTIONCMD_MAXTORQUE,
-    MOTIONCMD_MAXTORQUEQ,
-    MOTIONCMD_MINTORQUE,
-    MOTIONCMD_MINTORQUEQ,
-    MOTIONCMD_ORIGIN,
-    MOTIONCMD_ORIGINQ,
-    MOTIONCMD_REPORT,
-    MOTIONCMD_REPORTQ,
-    MOTIONCMD_RPPERIOD,
-    MOTIONCMD_RPPERIODQ,
-    MOTIONCMD_OOSTEPSQ,      //Out Of Steps Query
-    MOTIONCMD_STEPSQ,
-    MOTIONCMD_VELORITYQ,
-    MOTIONCMD_TORQUEQ,
-    MOTIONCMD_TEMPQ,
-    MOTIONCMD_RESERVE
-    
-    
-}MotionCmdSubTypeEnum;
-
-typedef enum
-{
-    OOSCMD_OUTNUM = 0,
-    OOSCMD_OUTNUMQ,
-    OOSCMD_RESPONSE,
-    OOSCMD_RESPONSEQ,
-    OOSCMD_RESERVE
-    
-}OOStepCmdSubTypeEnum;
 
 
 

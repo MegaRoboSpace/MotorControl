@@ -17,8 +17,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
+#include "errorcode.h"
 #include "debug.h"
-#include "cmdparse.h"
 
 
 
@@ -27,18 +28,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef enum
-{
-    SYSCMD_INFOQ = 0,
-    SYSCMD_ERRORQ,
-    SYSCMD_VERSIONQ,
-    SYSCMD_MODE,
-    SYSCMD_MODEQ,
-    SYSCMD_POWERON,
-    SYSCMD_POWERONQ,
-    SYSCMD_RESERVE
-    
-}SystemCmdSubTypeEnum;
 
 
 

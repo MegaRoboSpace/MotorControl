@@ -9,9 +9,10 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 完成日期:  2016.12.15;
 历史版本:  无;
 *********************************************************************************************/
+#include <string.h>
 #include "systemcmd.h"
 #include "systemparaverify.h"
-#include "protocolstack.h"
+#include "cmdparse.h"
 
 
 
@@ -44,7 +45,7 @@ SubCmdProFunc pSystemCmdFunc[SYSCMD_RESERVE];
 *********************************************************************************************/
 void SystemInfoQuery(u8 cmdDataLen, u8 *pCmdData)
 {
-    CmdTypeEnum cmdMainType;
+    /*CmdTypeEnum cmdMainType;
     SystemCmdSubTypeEnum cmdSubType;
     u8 dataLen;
     u8 *pData;
@@ -54,7 +55,7 @@ void SystemInfoQuery(u8 cmdDataLen, u8 *pCmdData)
     cmdSubType = SYSCMD_INFOQ;
     dataLen = sizeof(g_systemInfo.systemInfo);
     pData = (u8 *)&g_systemInfo.systemInfo;
-    CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
+    CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);*/
 }
 
 
@@ -77,7 +78,7 @@ void SystemErrorQuery(u8 cmdDataLen, u8 *pCmdData)
     cmdMainType = CMD_SYSTME;
     cmdSubType = SYSCMD_ERRORQ;
     dataLen = sizeof(g_systemInfo.errorCode);
-    pData = (u8 *)&g_systemInfo.errorCode;
+    pData = g_systemInfo.errorCode;
     CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
 }
 
@@ -100,8 +101,8 @@ void SystemVersionQuery(u8 cmdDataLen, u8 *pCmdData)
     
     cmdMainType = CMD_SYSTME;
     cmdSubType = SYSCMD_VERSIONQ;
-    dataLen = sizeof(g_systemInfo.version);
-    pData = (u8 *)&g_systemInfo.version;
+    dataLen = sizeof(g_systemInfo.version.software);
+    pData = g_systemInfo.version.software;
     CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
 }
 
@@ -206,6 +207,8 @@ void SystemPoweronQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void SystemCmdInit(void)
 {
+    memset(pSystemCmdFunc, 0, sizeof(pSystemCmdFunc));
+
     pSystemCmdFunc[SYSCMD_INFOQ]    = SystemInfoQuery;
     pSystemCmdFunc[SYSCMD_ERRORQ]   = SystemErrorQuery;
     pSystemCmdFunc[SYSCMD_VERSIONQ] = SystemVersionQuery;

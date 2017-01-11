@@ -19,14 +19,11 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /****************************************外部变量声明*****************************************/
-extern StreamBufferStr g_canRxBuffer;
-extern StreamBufferStr g_canTxBuffer;
 extern StreamBufferStr g_CmdParseBuffer;
 
 
 
 /*****************************************局部宏定义******************************************/
-#define    CAN_FRAME_BYTES_MAX    8    //CAN一帧发送的字节数，最大为8字节
 
 
 
@@ -35,10 +32,30 @@ extern StreamBufferStr g_CmdParseBuffer;
 
 
 /******************************************局部变量*******************************************/
+StreamBufferStr g_canRxBuffer;
+StreamBufferStr g_canTxBuffer;
+u8  canRxBuffer[480];
+u8  canTxBuffer[480];
 
 
 
 /******************************************函数实现*******************************************/
+/*********************************************************************************************
+函 数 名: CanStreamBufferInit;
+实现功能: 无; 
+输入参数: 无;
+输出参数: 无;
+返 回 值: 无;
+说    明: 无;
+*********************************************************************************************/
+void CanStreamBufferInit(void)
+{
+    //CAN phy层Buffer初始化
+    StreamBufferInit(&g_canRxBuffer, canRxBuffer, sizeof(canRxBuffer));
+    StreamBufferInit(&g_canTxBuffer, canTxBuffer, sizeof(canTxBuffer));  
+}
+
+
 /*********************************************************************************************
 函 数 名: SendCanFrame;
 实现功能: 无; 

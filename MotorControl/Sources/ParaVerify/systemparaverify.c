@@ -14,6 +14,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /****************************************外部变量声明*****************************************/
+extern SystemInfoStruct g_systemInfo;
 
 
 
@@ -26,7 +27,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /******************************************局部变量*******************************************/
-SystemInfoStruct g_systemInfo;
 
 
 
@@ -76,6 +76,8 @@ u8 SystemModeVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -116,6 +118,8 @@ u8 SystemPowerOnVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }

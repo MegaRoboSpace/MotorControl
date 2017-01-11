@@ -19,8 +19,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /****************************************外部变量声明*****************************************/
-extern StreamBufferStr g_uartRxBuffer;
-extern StreamBufferStr g_uartTxBuffer;
 extern StreamBufferStr g_CmdParseBuffer;
 
 
@@ -34,10 +32,30 @@ extern StreamBufferStr g_CmdParseBuffer;
 
 
 /******************************************局部变量*******************************************/
+StreamBufferStr g_uartRxBuffer;
+StreamBufferStr g_uartTxBuffer;
+u8  uartRxBuffer[1024];
+u8  uartTxBuffer[1024];
 
 
 
 /******************************************函数实现*******************************************/
+/*********************************************************************************************
+函 数 名: UartStreamBufferInit;
+实现功能: 无; 
+输入参数: 无;
+输出参数: 无;
+返 回 值: 无;
+说    明: 无;
+*********************************************************************************************/
+void UartStreamBufferInit(void)
+{
+    //Uart phy层Buffer初始化
+    StreamBufferInit(&g_uartRxBuffer, uartRxBuffer, sizeof(uartRxBuffer));
+    StreamBufferInit(&g_uartTxBuffer, uartTxBuffer, sizeof(uartTxBuffer)); 
+}
+
+
 /*********************************************************************************************
 函 数 名: UartFrameSend;
 实现功能: 无; 
@@ -52,7 +70,7 @@ void UartFrameSend(u8 dataLen, u8 *pDataBuffer)
     UartPhyFrameStr uartPhyFrame;
     u8 *pPhyFrame;
     u8 *pTempFrame;
-    u8 xorValue = USART1_START_OF_FRAME;
+    u8 xorValue = UART_START_OF_FRAME;
     u8 headLen = sizeof(UartPhyFrameStr) - 1;
     u8 i;
 
@@ -63,7 +81,7 @@ void UartFrameSend(u8 dataLen, u8 *pDataBuffer)
     {
         pUartPhyFrame = (UartPhyFrameStr *)pPhyFrame;
 
-        pPhyFrame[0] = USART1_START_OF_FRAME;
+        pPhyFrame[0] = UART_START_OF_FRAME;
         
         uartPhyFrame.frameLen = dataLen + sizeof(UartPhyFrameStr);
         uartPhyFrame.xorValue = 0;
@@ -94,14 +112,14 @@ void UartFrameSend(u8 dataLen, u8 *pDataBuffer)
 }
 
 /*********************************************************************************************
-函 数 名: UsartFrameProcess;
+函 数 名: UartFrameProcess;
 实现功能: 无; 
 输入参数: 无;
 输出参数: 无;
 返 回 值: 无;
 说    明: 无;
 *********************************************************************************************/
-void UsartFrameProcess()
+void UartFrameProcess()
 {
     UartPhyFrameStr *pUartPhyFrame = NULL;
     CmdParseFrameStr *pCmdPareFrame = NULL;
@@ -139,7 +157,7 @@ void UsartFrameProcess()
     {
         pUartPhyFrame = (UartPhyFrameStr *)GetHead(&g_uartTxBuffer);
 
-        USARTSend((u8 *)pUartPhyFrame, pUartPhyFrame->frameLen);
+        USART1Send((u8 *)pUartPhyFrame, pUartPhyFrame->frameLen);
 
         Dequeue(&g_uartTxBuffer, pUartPhyFrame->frameLen); //处理完成后出队
     }

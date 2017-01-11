@@ -17,8 +17,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
+#include "errorcode.h"
 #include "debug.h"
-#include "cmdparse.h"
 
 
 
@@ -27,33 +28,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef enum
-{
-    MOTORCMD_MICROSTEPS = 0,
-    MOTORCMD_MICROSTEPSQ,
-    MOTORCMD_GEARRATIO,
-    MOTORCMD_GEARRATIOQ,
-    MOTORCMD_STEPS,
-    MOTORCMD_STEPSQ,
-    MOTORCMD_PEAKSPEED,
-    MOTORCMD_PEAKSPEEDQ,
-    MOTORCMD_TYPE,
-    MOTORCMD_TYPEQ,
-    MOTORCMD_RESERVE
-    
-}MotorCmdSubTypeEnum;
-
-typedef enum
-{
-    ENCODERCMD_LINENUM = 0,
-    ENCODERCMD_LINENUMQ,
-    ENCODERCMD_CHANNUM,
-    ENCODERCMD_CHANNUMQ,
-    ENCODERCMD_TYPE,
-    ENCODERCMD_TYPEQ,
-    ENCODERCMD_RESERVE
-    
-}EncoderCmdSubTypeEnum;
 
 
 

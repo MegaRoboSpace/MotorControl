@@ -14,7 +14,8 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /****************************************外部变量声明*****************************************/
-extern ParaLimitStruct g_paraLimit;
+extern ParaLimitStruct  g_paraLimit;
+extern SystemInfoStruct g_systemInfo;
 
 
 
@@ -30,7 +31,6 @@ extern ParaLimitStruct g_paraLimit;
 
 
 /******************************************局部变量*******************************************/
-MotorInfoStruct g_motorInfo;
 
 
 
@@ -45,7 +45,7 @@ MotorInfoStruct g_motorInfo;
 *********************************************************************************************/
 u8 MotorMicroStepsVerify(u8 dataLen, u8 *pData, void *pParaValue)
 {
-    u8 tempValue;
+    u16 tempValue;
     u8 verifyResult = PARA_VERIFY_NO_ERROR;
 
     
@@ -54,7 +54,7 @@ u8 MotorMicroStepsVerify(u8 dataLen, u8 *pData, void *pParaValue)
         tempValue = *pData;
         if (tempValue < MOTOR_MICRO_STEPS_INDEX_NUM)
         {
-            *(u8 *)pParaValue = tempValue;
+            *(u16 *)pParaValue = tempValue;
         }
         else
         {
@@ -65,6 +65,8 @@ u8 MotorMicroStepsVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -108,6 +110,8 @@ u8 MotorGearRatioVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -142,6 +146,8 @@ u8 MotorStepAngleVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -186,6 +192,8 @@ u8 MotorPeakSpeedVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -221,6 +229,8 @@ u8 MotorTypeVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }
@@ -264,6 +274,8 @@ u8 EncoderLineNumVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -305,6 +317,8 @@ u8 EncoderChanNumVerify(u8 dataLen, u8 *pData, void *pParaValue)
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
 
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
+
     return verifyResult;
 }
 
@@ -345,6 +359,8 @@ u8 EncoderTypeVerify(u8 dataLen, u8 *pData, void *pParaValue)
     {
         verifyResult = PARA_VERIFY_ERROR_LEN;
     }
+
+    g_systemInfo.errorCode[ERROR_CODE_INDEX_PARA_VERIFY] = verifyResult;
 
     return verifyResult;
 }

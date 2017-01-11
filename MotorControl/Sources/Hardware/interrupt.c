@@ -24,7 +24,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /****************************************外部变量声明*****************************************/
 extern StreamBufferStr g_uartRxBuffer;
 extern StreamBufferStr g_canRxBuffer;
-extern SoftTimerStr    g_uartDmaTimer;
+extern SoftTimerStr    g_uartDmaRecTimer;
 
 
 
@@ -352,7 +352,7 @@ void DMA1_Channel5_IRQHandler(void)
 
     
     //关闭超时定时器
-    StimerDelete(&g_uartDmaTimer);
+    StimerDelete(&g_uartDmaRecTimer);
 
     DMA_ClearFlag(DMA1_FLAG_GL5 | DMA1_FLAG_TC5 | DMA1_FLAG_TE5);
     DMA_Cmd(USART1_RX_DMA_CH, DISABLE);
@@ -721,7 +721,7 @@ void USART1_IRQHandler(void)
         USART_ClearFlag(USART1, USART_FLAG_RXNE);    //清除接收数据寄存器非空标志位
         //receivedByte = USART_ReceiveData(USART1);
         
-        if (USART1_START_OF_FRAME == receivedByte)
+        if (UART_START_OF_FRAME == receivedByte)
         {
             bFrameHeadRcv = true;
         }
@@ -733,7 +733,7 @@ void USART1_IRQHandler(void)
                 bFrameHeadRcv = false;
 
                 //验证下长度是否正确
-                if ((receivedByte > 0) && (receivedByte < USART1_FRAME_LEN_MAX))
+                if ((receivedByte > 0) && (receivedByte < UART_FRAME_BYTES_AFESCAPE_MAX))
                 {
                     //关闭Uart中断
                     USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
@@ -745,7 +745,7 @@ void USART1_IRQHandler(void)
                     if (NULL != pReceiveBuffer)
                     {
                         //存入帧长和数据长度
-                        *pReceiveBuffer++ = USART1_START_OF_FRAME;
+                        *pReceiveBuffer++ = UART_START_OF_FRAME;
                         //*pReceiveBuffer++ = receivedByte;
                         
                         //启动DMA
@@ -759,7 +759,7 @@ void USART1_IRQHandler(void)
                         DMA_Cmd(USART1_RX_DMA_CH, ENABLE);
 
                         //开启DMA接收超时定时器
-                        StimerAdd(&g_uartDmaTimer);
+                        StimerAdd(&g_uartDmaRecTimer);
                     }
                     else
                     {

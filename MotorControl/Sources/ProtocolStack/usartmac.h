@@ -17,6 +17,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
 #include "debug.h"
 
 
@@ -26,19 +27,15 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef struct
-{    
-    u8             SOF;           //帧起始标记 0xFE 
-    u8             frameLen;      //消息长度，包含SOF和自身
-    u8             xorValue;      //校验值
-    u8             payload[0];    //消息数据
-    
-}UartPhyFrameStr;
 
 
 
-/*******************************************宏定义********************************************/ 
+/*******************************************宏定义********************************************/
+#define    UART_START_OF_FRAME                FE_BEFORE_ESCAPE 
 #define    GET_UART_PHY_FRMAE_PAYLOAD_SIZE    frameLen - sizeof(UartPhyFrameStr)
+
+#define    UART_FRAME_BYTES_BFESCAPE_MAX    124     //Uart一帧发送的最大字节数，转义前
+#define    UART_FRAME_BYTES_AFESCAPE_MAX    0xFC    //Uart一帧发送的最大字节数，转义后
 
 
 
@@ -47,8 +44,9 @@ typedef struct
 
 
 /******************************************函数声明*******************************************/
+void UartStreamBufferInit(void);
 void UartFrameSend(u8 dataLen, u8 *pDataBuffer);
-void UsartFrameProcess();
+void UartFrameProcess();
 
 
 

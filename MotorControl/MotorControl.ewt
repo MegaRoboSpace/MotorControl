@@ -2319,6 +2319,9 @@
     <file>
       <name>$PROJ_DIR$\Sources\App\pvtalgorithm.c</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\Sources\App\systeminit.c</name>
+    </file>
   </group>
   <group>
     <name>CmdParse</name>
@@ -2495,9 +2498,6 @@
     <name>ProtocolStack</name>
     <file>
       <name>$PROJ_DIR$\Sources\ProtocolStack\canmac.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\Sources\ProtocolStack\protocolstack.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\Sources\ProtocolStack\usartmac.c</name>

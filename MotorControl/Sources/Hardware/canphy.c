@@ -11,14 +11,11 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 *********************************************************************************************/
 #include <string.h>
 #include "canphy.h"
-#include "intfcparaverify.h"
 
 
 
 /****************************************外部变量声明*****************************************/
-extern u32 g_canType[CAN_ID_TYPE_NUM];
-extern u16 g_canPrescaler[CAN_BAUDRATE_NUM];
-extern SystemInterfaceStruct g_systemIntfc;
+extern SystemIntfcStruct g_systemIntfc;
 
 
 
@@ -31,6 +28,10 @@ extern SystemInterfaceStruct g_systemIntfc;
 
 
 /******************************************局部变量*******************************************/
+u32 g_canType[CAN_ID_TYPE_NUM] = {CAN_ID_STD, CAN_ID_EXT};
+
+//按顺序依次对应的波特率是1000、500、250、125、100、50、20、10kBps
+u16 g_canPrescaler[CAN_BAUDRATE_NUM] = {6, 12, 24, 48, 60, 120, 300, 600}; 
 
 
 
@@ -45,7 +46,7 @@ extern SystemInterfaceStruct g_systemIntfc;
 *********************************************************************************************/
 void CANInit(void)
 {
-    u32 canType = g_canType[g_systemIntfc.canIntfc.idTypeIndex];
+    u32 canType = g_canType[g_systemIntfc.canIntfc.idType];
     CAN_FilterInitTypeDef CAN_FilterInitStructure;
     NVIC_InitTypeDef      NVIC_InitStructure;
     GPIO_InitTypeDef      GPIO_InitStructure;
@@ -87,7 +88,7 @@ void CANInit(void)
     CAN_InitStructure.CAN_BS1 = CAN_BS1_3tq;         //时间段1为3个时间单位
     CAN_InitStructure.CAN_BS2 = CAN_BS2_2tq;         //时间段2为2个时间单位
 
-    CAN_InitStructure.CAN_Prescaler = g_canPrescaler[g_systemIntfc.canIntfc.baudIndex];
+    CAN_InitStructure.CAN_Prescaler = g_canPrescaler[g_systemIntfc.canIntfc.baud];
 
     CAN_Init(CAN_SYSTEM_CAN_TYPE, &CAN_InitStructure);
 
@@ -159,7 +160,7 @@ void CANSend(u32 canId, u8 canRtr, u8 dataLen, u8 *pData)
     
     TxMessage.RTR = canRtr;     //为数据帧: CAN_RTR_DATA/CAN_RTR_REMOTE
     
-    TxMessage.IDE = g_canType[g_systemIntfc.canIntfc.idTypeIndex];     //使用扩展标识符: CAN_ID_EXT/CAN_ID_STD
+    TxMessage.IDE = g_canType[g_systemIntfc.canIntfc.idType];     //使用扩展标识符: CAN_ID_EXT/CAN_ID_STD
 
     if (dataLen <= 8)
     {

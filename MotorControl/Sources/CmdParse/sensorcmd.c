@@ -9,9 +9,10 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 完成日期:  2016.12.15;
 历史版本:  无;
 *********************************************************************************************/
+#include <string.h>
 #include "sensorcmd.h"
 #include "sensorparaverify.h"
-#include "protocolstack.h"
+#include "cmdparse.h"
 
 
 
@@ -183,6 +184,8 @@ void OtpResponseQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void OtpCmdInit(void)
 {
+    memset(pOtpCmdFunc, 0, sizeof(pOtpCmdFunc));
+
     pOtpCmdFunc[OTPCMD_STATE]      = OtpStateSet;
     pOtpCmdFunc[OTPCMD_STATEQ]     = OtpStateQuery;
     pOtpCmdFunc[OTPCMD_THRESHOLD]  = OtpThresholdSet;
@@ -372,6 +375,8 @@ void DsensorResponseQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void DsensorCmdInit(void)
 {
+    memset(pDsensorCmdFunc, 0, sizeof(pDsensorCmdFunc));
+
     pDsensorCmdFunc[DSENSORCMD_STATE]     = DsensorStateSet;
     pDsensorCmdFunc[DSENSORCMD_STATEQ]    = DsensorStateQuery;
     pDsensorCmdFunc[DSENSORCMD_TYPE]      = DsensorTypeSet;
@@ -562,6 +567,8 @@ void AsensorResponseQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void AsensorCmdInit(void)
 {
+    memset(pAsensorCmdFunc, 0, sizeof(pAsensorCmdFunc));
+
     pAsensorCmdFunc[ASENSORCMD_STATE]      = AsensorStateSet;
     pAsensorCmdFunc[ASENSORCMD_STATEQ]     = AsensorStateQuery;
     pAsensorCmdFunc[ASENSORCMD_THRESHOLD]  = AsensorThresholdSet;

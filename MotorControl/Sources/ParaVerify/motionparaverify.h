@@ -17,8 +17,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
+#include "errorcode.h"
 #include "debug.h"
-#include "paraverify.h"
 
 
 
@@ -27,45 +28,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef enum
-{
-    REPORT_OUTNUM = 0,
-    REPORT_STEPS,
-    REPORT_VELORITY,
-    REPORT_TORQUE,
-    REPORT_TEMP,
-    REPORT_RESERVE
-    
-}ReportTypeEnum;
-
-typedef struct
-{
-    u32              outOfSteps;
-    ResponseTypeEnum response;
-      
-}OOStepInfoStruct;
-
-typedef struct
-{
-    bool bMotion;
-    bool bReptEnable[REPORT_RESERVE];    //是否使能上报功能
-    u8   temp;             //电机温度
-    u32  emergency;
-    u32  maxSpeed;
-    u32  minSpeed;
-    u32  maxPosn;
-    u32  minPosn;
-    u32  maxTorque;
-    u32  minTorque;
-    u32  origin;
-    u32  reptPeriod;       //上报周期
-    u32  outOfSteps;
-    u32  steps;
-    u32  velority;
-    u32  torque;
-    OOStepInfoStruct outOfStepInfo;
-      
-}MotionInfoStruct;
 
 
 

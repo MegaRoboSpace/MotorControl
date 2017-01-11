@@ -17,8 +17,9 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
+#include "errorcode.h"
 #include "debug.h"
-#include "cmdparse.h"
 
 
 
@@ -31,45 +32,6 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef enum
-{
-    PVTCMD_MODE = 0,
-    PVTCMD_MODEQ,
-    PVTCMD_POINT,
-    PVTCMD_POINTQ,
-    PVTCMD_POSN,
-    PVTCMD_POSNQ,
-    PVTCMD_SPEED,
-    PVTCMD_SPEEDQ,
-    PVTCMD_TIME,
-    PVTCMD_TIMEQ,
-    PVTCMD_REMAINPOINTQ,
-    PVTCMD_OUTPUTPOINTQ,
-    PVTCMD_STARTPOINT,
-    PVTCMD_STARTPOINTQ,
-    PVTCMD_ENDPOINT,
-    PVTCMD_ENDPOINTQ,
-    PVTCMD_NCYCLES,
-    PVTCMD_NCYCLESQ,
-    PVTCMD_WARNPOINT,
-    PVTCMD_WARNPOINTQ,
-    PVTCMD_CLEAR,
-    PVTCMD_WARN,
-    PVTCMD_CALCEND,
-    PVTCMD_RESERVE
-    
-}PvtCmdSubTypeEnum;
-
-typedef enum
-{
-    TRAPZCMD_POINT = 0,
-    TRAPZCMD_POINTQ,
-    TRAPZCMD_POSN,
-    TRAPZCMD_SPEED,
-    TRAPZCMD_TIME,
-    TRAPZCMD_RESERVE
-    
-}TrapzCmdSubTypeEnum;
 
 
 
@@ -101,6 +63,7 @@ void PvtWarnPointQuery(u8 cmdDataLen, u8 *pCmdData);
 void PvtWarn(u8 cmdDataLen, u8 *pCmdData);
 void PvtClear(u8 cmdDataLen, u8 *pCmdData);
 void PvtCalcEnd(u8 cmdDataLen, u8 *pCmdData);
+void PvtCalcEndTimerCB(void);
 void PvtCmdInit(void);
 void PvtCmdProc(CmdParseFrameStr *pCmdStackFrame);
 

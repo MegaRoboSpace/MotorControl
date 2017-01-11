@@ -17,6 +17,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 /******************************************包含文件*******************************************/
 #include "stm32f10x.h"
 #include "datatype.h"
+#include "comStruct.h"
 #include "debug.h"
 
 
@@ -30,16 +31,7 @@ Copyright (C) 2016，北京镁伽机器人科技有限公司
 
 
 /***************************************常数和类型声明****************************************/
-typedef void ( *timeOutFunc)(void);
 
-typedef struct
-{
-  bool         bUsed;
-  u16          periodMS;
-  u16          timeoutMS;
-  timeOutFunc  timerOut;
-  
-}SoftTimerStr;
 
 
 /******************************************变量声明*******************************************/
@@ -52,9 +44,6 @@ void StimerInit(SoftTimerStr *thiss, u16 interval, timeOutFunc fTimerProcessor);
 bool StimerExamine(SoftTimerStr * thiss);
 void StimerAdd(SoftTimerStr *ptSoftTimer);
 bool StimerDelete(SoftTimerStr *ptSoftTimer);
-void StimerAllCheck(void);
-void StimerAllInit(void);
-void PvtCalcEndTimerOutCB(void);
 
 
 
