@@ -86,23 +86,25 @@ void SystemParaInit(void)
     g_systemIntfc.canIntfc.radioId  = 0x00010000;
     
     g_systemIntfc.uartIntfc.baud = UARTBAUD_115200;
-    g_systemIntfc.uartIntfc.wordLen = 0;
-    g_systemIntfc.uartIntfc.stopBit = 0;
-    g_systemIntfc.uartIntfc.parity = 0;
-    g_systemIntfc.uartIntfc.flowCtl = 0;
+    g_systemIntfc.uartIntfc.wordLen = WORDLEN_8;
+    g_systemIntfc.uartIntfc.stopBit = STOPBIT_10;
+    g_systemIntfc.uartIntfc.parity = PARITY_NONE;
+    g_systemIntfc.uartIntfc.flowCtl = FLOWCTL_NONE;
 
 
     //电机信息结构体初始化
     g_motorInfo.motorType = MOTOR_57;
     g_motorInfo.gearRatio = 10;
-    g_motorInfo.stepsIndex = 200;
-    g_motorInfo.microStepsIndex = 256;
+    g_motorInfo.stepAngel = STEPANGLE_18;
+    g_motorInfo.microSteps = MICROSTEP_256;
     //g_motorInfo.peakSpeed = ;
-    g_motorInfo.totalSteps = g_motorInfo.gearRatio *  g_motorInfo.stepsIndex * g_motorInfo.microStepsIndex;
+    //g_motorInfo.totalSteps = g_motorInfo.gearRatio *  g_motorInfo.stepAngel * g_motorInfo.microSteps;
+    g_motorInfo.totalSteps = 512000;
     g_motorInfo.encoderInfo.type = ENCODER_INC;
     g_motorInfo.encoderInfo.chanNum = ECCHAN_3;
-    g_motorInfo.encoderInfo.lineNum = 4000;
-    g_motorInfo.encoderInfo.linePerRadian = g_motorInfo.encoderInfo.lineNum * 2 * RECIP_OF_DBL_RADIAN; 
+    g_motorInfo.encoderInfo.lineNum = ECLINE_1000;
+    //g_motorInfo.encoderInfo.linePerRadian = g_motorInfo.encoderInfo.lineNum * 2 * RECIP_OF_DBL_RADIAN; 
+    g_motorInfo.encoderInfo.linePerRadian = 4000 * RECIP_OF_DBL_RADIAN; 
 
 
     //运行信息结构体初始化

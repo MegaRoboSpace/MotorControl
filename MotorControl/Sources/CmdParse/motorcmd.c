@@ -46,16 +46,16 @@ SubCmdProFunc pEncoderCmdFunc[ENCODERCMD_RESERVE];
 *********************************************************************************************/
 void MotorMicroStepsSet(u8 cmdDataLen, u8 *pCmdData)
 {
-    u16 microStepsIndex;
+    MicroStepEnum microSteps;
 
     
     //进行参数验证
-    if (PARA_VERIFY_NO_ERROR == MotorMicroStepsVerify(cmdDataLen, pCmdData, (void *)&microStepsIndex))
+    if (PARA_VERIFY_NO_ERROR == MotorMicroStepsVerify(cmdDataLen, pCmdData, (void *)&microSteps))
     {
-        g_motorInfo.microStepsIndex = microStepsIndex;
+        g_motorInfo.microSteps = microSteps;
 
         //微步数和步数改变后需要重新计算总的步数 NICK MARK
-        g_motorInfo.totalSteps = g_motorInfo.microStepsIndex * g_motorInfo.stepsIndex;
+        //g_motorInfo.totalSteps = g_motorInfo.microSteps * g_motorInfo.stepAngel;
     }
 }
 
@@ -78,8 +78,8 @@ void MotorMicroStepsQuery(u8 cmdDataLen, u8 *pCmdData)
     
     cmdMainType = CMD_MOTOR;
     cmdSubType = MOTORCMD_MICROSTEPSQ;
-    dataLen = sizeof(g_motorInfo.microStepsIndex);
-    pData = (u8 *)&g_motorInfo.microStepsIndex;
+    dataLen = sizeof(g_motorInfo.microSteps);
+    pData = (u8 *)&g_motorInfo.microSteps;
     CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
 }
 
@@ -139,16 +139,16 @@ void MotorGearRatioQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void MotorStepAngleSet(u8 cmdDataLen, u8 *pCmdData)
 {
-    u8 stepsIndex;
+    StepAngleEnum stepAngel;
 
     
     //进行参数验证
-    if (PARA_VERIFY_NO_ERROR == MotorStepAngleVerify(cmdDataLen, pCmdData, (void *)&stepsIndex))
+    if (PARA_VERIFY_NO_ERROR == MotorStepAngleVerify(cmdDataLen, pCmdData, (void *)&stepAngel))
     {
-        g_motorInfo.stepsIndex = stepsIndex;
+        g_motorInfo.stepAngel = stepAngel;
 
         //微步数和步数改变后需要重新计算总的步数 NICK MARK
-        g_motorInfo.totalSteps = g_motorInfo.microStepsIndex * g_motorInfo.stepsIndex;
+        //g_motorInfo.totalSteps = g_motorInfo.microSteps * g_motorInfo.stepAngel;
     }
 }
 
@@ -171,8 +171,8 @@ void MotorStepAngleQuery(u8 cmdDataLen, u8 *pCmdData)
     
     cmdMainType = CMD_MOTOR;
     cmdSubType = MOTORCMD_STEPS;
-    dataLen = sizeof(g_motorInfo.stepsIndex);
-    pData = (u8 *)&g_motorInfo.stepsIndex;
+    dataLen = sizeof(g_motorInfo.stepAngel);
+    pData = (u8 *)&g_motorInfo.stepAngel;
     CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
 }
 
@@ -323,7 +323,7 @@ void MotorCmdProc(CmdParseFrameStr *pCmdStackFrame)
 *********************************************************************************************/
 void EncoderLineNumSet(u8 cmdDataLen, u8 *pCmdData)
 {
-    u8 lineNum;
+    EncoderLineEnum lineNum;
 
     
     //进行参数验证

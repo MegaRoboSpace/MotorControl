@@ -65,10 +65,10 @@ typedef struct
 /*-----------UART Phy层帧格式结构体-----------*/
 typedef struct
 {    
-    u8             SOF;           //Start of frame
-    u8             frameLen;      //帧长度，包含SOF和自身
-    u8             xorValue;      //异或校验值
-    u8             payload[0];    //帧数据
+    u8 SOF;           //Start of frame
+    u8 frameLen;      //帧长度，包含SOF和自身
+    u8 xorValue;      //异或校验值
+    u8 payload[0];    //帧数据
     
 }UartPhyFrameStr;
 
@@ -89,12 +89,11 @@ typedef struct
 /*-------------UART接口结构体------------*/
 typedef struct
 {
-    UartBaudEnum  baud;     //波特率
-    
-    u8  wordLen :2;    //数据长度
-    u8  stopBit :2;    //停止位
-    u8  parity  :2;    //校验方式
-    u8  flowCtl :2;    //流控制
+    UartBaudEnum baud;       //波特率
+    WordLenEnum  wordLen;    //数据长度
+    StopBitEnum  stopBit;    //停止位
+    ParityEnum   parity;     //校验方式
+    FlowCtlEnum  flowCtl;    //流控制
     
 }UartIntfcStruct;
 
@@ -157,7 +156,7 @@ typedef struct
 {
     EncoderTypeEnum type;             //类型
     EncoderChanEnum chanNum;          //通道数
-    u16             lineNum;          //线数
+    EncoderLineEnum lineNum;          //线数
     f32             linePerRadian;    //每弧度对应的线数，由通道数和线数计算
       
 }EncoderInfoStruct;
@@ -167,8 +166,8 @@ typedef struct
 {
     MotorTypeEnum        motorType;          //类型
     u8                   gearRatio;          //减速比
-    u8                   stepsIndex;         //步距角
-    u16                  microStepsIndex;    //微步数
+    StepAngleEnum        stepAngel;          //步距角
+    MicroStepEnum        microSteps;         //微步数
     u32                  peakSpeed;          //最大运行速度
     u32                  totalSteps;         //总步数，等于microSteps * steps * gearRatio
     EncoderInfoStruct    encoderInfo;        //配套的编码器

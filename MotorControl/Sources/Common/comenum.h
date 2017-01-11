@@ -357,9 +357,41 @@ typedef enum
 }UartBaudEnum;
 
 /*-------------UART数据长度枚举-------------*/
+typedef enum
+{
+    WORDLEN_8 = 0,    //4800bps
+    WORDLEN_9
+    
+}WordLenEnum;
+
 /*-------------UART流控制枚举-------------*/
+typedef enum
+{
+    STOPBIT_10 = 0,
+    STOPBIT_05,
+    STOPBIT_20,
+    STOPBIT_15
+    
+}StopBitEnum;
+
 /*-------------UART校验方式枚举-------------*/
+typedef enum
+{
+    PARITY_NONE = 0,
+    PARITY_EVEN,
+    PARITY_ODD
+    
+}ParityEnum;
+
 /*-------------UART停止位枚举-------------*/
+typedef enum
+{
+    FLOWCTL_NONE = 0,
+    FLOWCTL_RTS,
+    FLOWCTL_CTS,
+    FLOWCTL_RTS_CTS
+    
+}FlowCtlEnum;
 
 /*-------------CAN类型枚举-------------*/
 typedef enum
@@ -383,8 +415,31 @@ typedef enum
     
 }CanBaudEnum;
 
-/*-------------电机微步枚举-------------*/
+
 /*-------------电机步距角枚举-------------*/
+typedef enum
+{
+    STEPANGLE_18 = 0,    //1.8°
+    STEPANGLE_09,        //0.9°
+    STEPANGLE_15,        //1.5°
+    STEPANGLE_07         //0.75°
+    
+}StepAngleEnum;
+
+/*-------------电机微步枚举-------------*/
+typedef enum
+{
+    MICROSTEP_1 = 0,
+    MICROSTEP_2,
+    MICROSTEP_4,
+    MICROSTEP_8,
+    MICROSTEP_16,
+    MICROSTEP_32,
+    MICROSTEP_64,
+    MICROSTEP_128,
+    MICROSTEP_256
+    
+}MicroStepEnum;
 
 /*-------------电机类型枚举-------------*/
 typedef enum
@@ -396,6 +451,12 @@ typedef enum
 }MotorTypeEnum;
 
 /*-------------编码器线数枚举-------------*/
+typedef enum
+{
+    ECLINE_1000,   //1000线
+    ECLINE_2000    //2000线
+    
+}EncoderLineEnum;
 
 /*-------------编码器通道数枚举-------------*/
 typedef enum

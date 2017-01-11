@@ -93,7 +93,7 @@ void UartBaudQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void UartWordLenSet(u8 cmdDataLen, u8 *pCmdData)
 {
-    u8 wordLen;
+    WordLenEnum wordLen;
 
     
     //进行参数验证
@@ -117,18 +117,14 @@ void UartWordLenQuery(u8 cmdDataLen, u8 *pCmdData)
     CmdTypeEnum cmdMainType;
     UartCmdSubTypeEnum cmdSubType;
     u8 dataLen;
-    //u8 *pData;
-    u8 data;
+    u8 *pData;
 
     
     cmdMainType = CMD_UART;
     cmdSubType = UARTCMD_WORDLENQ;
-    dataLen = 1;
-    data = g_systemIntfc.uartIntfc.wordLen;
-    CmdFrameSend(cmdMainType, cmdSubType, dataLen, &data);
-    //dataLen = sizeof(g_systemIntfc.uartIntfc.wordLen);
-    //pData = &g_systemIntfc.uartIntfc.wordLen;
-    //CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
+    dataLen = sizeof(g_systemIntfc.uartIntfc.wordLen);
+    pData = (u8 *)&g_systemIntfc.uartIntfc.wordLen;
+    CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
 }
 
 
@@ -142,7 +138,7 @@ void UartWordLenQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void UartFlowCtlSet(u8 cmdDataLen, u8 *pCmdData)
 {
-    u8 flowCtl;
+    FlowCtlEnum flowCtl;
 
     
     //进行参数验证
@@ -166,18 +162,14 @@ void UartFlowCtlQuery(u8 cmdDataLen, u8 *pCmdData)
     CmdTypeEnum cmdMainType;
     UartCmdSubTypeEnum cmdSubType;
     u8 dataLen;
-    //u8 *pData;
-    u8 data;
+    u8 *pData;
 
     
     cmdMainType = CMD_UART;
     cmdSubType = UARTCMD_FLOWCTLQ;
-    dataLen = 1;
-    data = g_systemIntfc.uartIntfc.flowCtl;
-    CmdFrameSend(cmdMainType, cmdSubType, dataLen, &data);
-    //dataLen = sizeof(g_systemIntfc.uartIntfc.flowCtl);
-    //pData = &g_systemIntfc.uartIntfc.flowCtl;
-    //CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
+    dataLen = sizeof(g_systemIntfc.uartIntfc.flowCtl);
+    pData = (u8 *)&g_systemIntfc.uartIntfc.flowCtl;
+    CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
 }
 
 
@@ -191,7 +183,7 @@ void UartFlowCtlQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void UartParitySet(u8 cmdDataLen, u8 *pCmdData)
 {
-    u8 parity;
+    ParityEnum parity;
 
     
     //进行参数验证 
@@ -215,18 +207,14 @@ void UartParityQuery(u8 cmdDataLen, u8 *pCmdData)
     CmdTypeEnum cmdMainType;
     UartCmdSubTypeEnum cmdSubType;
     u8 dataLen;
-    //u8 *pData;
-    u8 data;
+    u8 *pData;
 
     
     cmdMainType = CMD_UART;
     cmdSubType = UARTCMD_PARITYQ;
-    dataLen = 1;
-    data = g_systemIntfc.uartIntfc.parity;
-    CmdFrameSend(cmdMainType, cmdSubType, dataLen, &data);
-    //dataLen = sizeof(g_systemIntfc.uartIntfc.parity);
-    //pData = &g_systemIntfc.uartIntfc.parity;
-    //CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
+    dataLen = sizeof(g_systemIntfc.uartIntfc.parity);
+    pData = (u8 *)&g_systemIntfc.uartIntfc.parity;
+    CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
 }
 
 
@@ -240,7 +228,7 @@ void UartParityQuery(u8 cmdDataLen, u8 *pCmdData)
 *********************************************************************************************/
 void UartStopBitSet(u8 cmdDataLen, u8 *pCmdData)
 {
-    u8 stopBit;
+    StopBitEnum stopBit;
 
     
     //进行参数验证
@@ -264,18 +252,14 @@ void UartStopBitQuery(u8 cmdDataLen, u8 *pCmdData)
     CmdTypeEnum cmdMainType;
     UartCmdSubTypeEnum cmdSubType;
     u8 dataLen;
-    //u8 *pData;
-    u8 data;
+    u8 *pData;
 
     
     cmdMainType = CMD_UART;
     cmdSubType = UARTCMD_STOPBITQ;
-    dataLen = 1;
-    data = g_systemIntfc.uartIntfc.stopBit;
-    CmdFrameSend(cmdMainType, cmdSubType, dataLen, &data);
-    //dataLen = sizeof(g_systemIntfc.uartIntfc.stopBit);
-    //pData = &g_systemIntfc.uartIntfc.stopBit;
-    //CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
+    dataLen = sizeof(g_systemIntfc.uartIntfc.stopBit);
+    pData = (u8 *)&g_systemIntfc.uartIntfc.stopBit;
+    CmdFrameSend(cmdMainType, cmdSubType, dataLen, pData);
 }
 
 
